@@ -29,8 +29,7 @@ export const transactionStatusEnum = pgEnum("transaction_status", [
 // AUTH TABLES
 export const user = pgTable("user", {
 	id: text("id").primaryKey(),
-	firstName: text("first_name").notNull(),
-	lastName: text("last_name").notNull(),
+	name: text("name").notNull(),
 	email: text("email").notNull().unique(),
 	emailVerified: boolean("email_verified").default(false).notNull(),
 	phoneNumber: text("phone_number"),
@@ -331,3 +330,15 @@ export const winner = pgTable(
 		index("winner_blockId_idx").on(table.blockId),
 	],
 );
+
+export const schema = {
+	user,
+	session,
+	account,
+	verification,
+	sportsGame,
+	blocksGame,
+	block,
+	transaction,
+	winner,
+};
