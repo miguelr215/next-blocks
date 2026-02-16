@@ -26,16 +26,17 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { z } from "zod";
 import { toast } from "sonner";
 
-import { signIn } from "@/server/users";
+import { signUp } from "@/server/users";
 import { authClient } from "@/lib/auth-client";
 import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters"),
   email: z.string().email(),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-export function LoginForm({
+export function SignUpForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -44,6 +45,7 @@ export function LoginForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      username: "",
       email: "",
       password: "",
     },
@@ -58,7 +60,7 @@ export function LoginForm({
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const { success, message } = await signIn(data.email, data.password);
+    const { success, message } = await signUp(data.username, data.email, data.password);
 
     if (success) {
       toast.success(message as string);
@@ -74,14 +76,14 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
+          <CardTitle className="text-xl">Welcome to Sports Blocks</CardTitle>
           <CardDescription>
-            Login with your Google account
+            Sign up with your Google account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form id="login-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form id="signup-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FieldGroup>
                 <Field>
                   <Button variant="outline" type="button" onClick={signInWithGoogle} disabled={isLoading}>
@@ -93,7 +95,7 @@ export function LoginForm({
                             fill="currentColor"
                           />
                         </svg>
-                        Login with Google
+                        Sign up with Google
                       </>
                     )}
                   </Button>
@@ -101,6 +103,19 @@ export function LoginForm({
                 <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                   Or continue with
                 </FieldSeparator>
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Username</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Mike Honcho" {...field} type="text" required />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="email"
@@ -114,28 +129,25 @@ export function LoginForm({
                     </FormItem>
                   )}
                 />
-                <div className="grid gap-3">
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input placeholder="********" {...field} type="password" required />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Link href="/forgot-password" className="text-sm text-right font-semibold text-gray-600 hover:text-gray-900 active:text-gray-900">Forgot password?</Link>
-                </div>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input placeholder="********" {...field} type="password" required />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <Field>
                   <Button type="submit" className="cursor-pointer" disabled={isLoading}>
-                    {isLoading ? <Loader2 className="size-4 animate-spin" /> : "Login"}
+                    {isLoading ? <Loader2 className="size-4 animate-spin" /> : "Sign Up"}
                   </Button>
                   <FieldDescription className="text-center">
-                    Don&apos;t have an account? <Link href="/signup">Sign up</Link>
+                    Already have an account? <Link href="/login">Login</Link>
                   </FieldDescription>
                 </Field>
               </FieldGroup>
