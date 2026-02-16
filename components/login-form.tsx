@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,10 +23,11 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 import { z } from "zod";
-import Link from "next/link";
 import { toast } from "sonner";
 
 import { signIn } from "@/server/users";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -36,6 +38,7 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,6 +49,7 @@ export function LoginForm({
   });
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
+    setIsLoading(true);
     const { success, message } = await signIn(data.email, data.password);
 
     if (success) {
@@ -54,6 +58,8 @@ export function LoginForm({
     } else {
       toast.error(message as string)
     }
+
+    setIsLoading(false);
   }
 
   return (
@@ -113,7 +119,9 @@ export function LoginForm({
                   <Link href="/forgot-password" className="text-sm text-right font-semibold text-gray-600 hover:text-gray-900 active:text-gray-900">Forgot password?</Link>
                 </div>
                 <Field>
-                  <Button type="submit" className="cursor-pointer">Login</Button>
+                  <Button type="submit" className="cursor-pointer" disabled={isLoading}>
+                    {isLoading ? <Loader2 className="size-4 animate-spin" /> : "Login"}
+                  </Button>
                   <FieldDescription className="text-center">
                     Don&apos;t have an account? <a href="/signup">Sign up</a>
                   </FieldDescription>
