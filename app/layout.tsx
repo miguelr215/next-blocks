@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner"
 import "./globals.css";
+import { Montserrat } from "next/font/google";
+import { SBHeader } from "@/components/sb-header";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap"
 });
 
 export const metadata: Metadata = {
@@ -24,12 +22,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${montserrat.variable}`}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={` antialiased`}
       >
-        {children}
-        <Toaster />
+        <SBHeader />
+        <main className="pt-20 md:pt-25 lg:pt-26.75 px-4 md:px-8 lg:px-12">
+          {children}
+          <Toaster />
+        </main>
       </body>
     </html>
   );
