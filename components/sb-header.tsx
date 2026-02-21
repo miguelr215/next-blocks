@@ -1,25 +1,37 @@
 "use client";
 
 import Link from 'next/link'
+import Image from 'next/image'
 import SmallLogo from './ui/smallLogo';
-import { Menu, X } from 'lucide-react'
+import { LogOut, Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useScroll } from 'motion/react'
+import { authClient } from '@/lib/auth-client'
 
 const menuItems = [
-    { name: 'Sports', href: '#link' },
-    { name: 'Games', href: '#link' },
-    { name: 'How To Play', href: '#link' },
-    { name: 'About', href: '#link' }
+    { name: 'Sports', href: '/sports' },
+    { name: 'Games', href: '/games' },
+    { name: 'How To Play', href: '/how-to-play' },
+    { name: 'About', href: '/about' }
 ]
 
 export const SBHeader = () => {
     const [menuState, setMenuState] = useState(false)
     const [scrolled, setScrolled] = useState(false)
+    const router = useRouter()
 
+    const { data: session, isPending } = authClient.useSession()
+    console.log(`useSession session: `, session);
+    console.log(`useSession isPending: `, isPending);
     const { scrollYProgress } = useScroll()
+
+    const handleLogout = async () => {
+        await authClient.signOut()
+        router.push('/')
+    }
 
     useEffect(() => {
         const unsubscribe = scrollYProgress.on('change', (latest) => {
@@ -80,23 +92,56 @@ export const SBHeader = () => {
                                     ))}
                                 </ul>
                             </div>
-                            {/* TODO: add logic to show profile image/link, balance, and logout button if user is authenticated */}
-                            <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                <Button
-                                    asChild
-                                    variant="outline"
-                                    size="sm">
-                                    <Link href="/login">
-                                        <span>Login</span>
-                                    </Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    size="sm">
-                                    <Link href="/signup">
-                                        <span>Sign Up</span>
-                                    </Link>
-                                </Button>
+                            <div className="flex w-full flex-col space-y-3 sm:flex-row sm:items-center sm:gap-3 sm:space-y-0 md:w-fit">
+                                {isPending ? null : session ? (
+                                    <>
+                                        <span className="text-sm font-medium text-muted-foreground">
+                                            $420.69
+                                        </span>
+                                        <Link
+                                            href="/dashboard"
+                                            className="flex items-center gap-2 rounded-full transition-opacity hover:opacity-80">
+                                            {session.user.image ? (
+                                                <Image
+                                                    src={session.user.image}
+                                                    alt={session.user.name ?? 'Profile'}
+                                                    width={32}
+                                                    height={32}
+                                                    className="size-8 rounded-full object-cover"
+                                                />
+                                            ) : (
+                                                <span className="flex size-8 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+                                                    {session.user.name?.charAt(0).toUpperCase() ?? '?'}
+                                                </span>
+                                            )}
+                                        </Link>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={handleLogout}>
+                                            <LogOut className="size-4" />
+                                            <span className="sm:hidden lg:inline">Logout</span>
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Button
+                                            asChild
+                                            variant="outline"
+                                            size="sm">
+                                            <Link href="/login">
+                                                <span>Login</span>
+                                            </Link>
+                                        </Button>
+                                        <Button
+                                            asChild
+                                            size="sm">
+                                            <Link href="/signup">
+                                                <span>Sign Up</span>
+                                            </Link>
+                                        </Button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>

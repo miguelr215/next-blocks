@@ -19,5 +19,12 @@ export const auth = betterAuth({
 		provider: "pg",
 		schema,
 	}),
+	session: {
+		cookieCache: {
+			enabled: true,
+			maxAge: 60 * 60 * 24 * 7, // 7 days
+			strategy: "compact",
+		},
+	},
 	plugins: [nextCookies()], // make sure nextCookies() is the last plugin in the array
 });

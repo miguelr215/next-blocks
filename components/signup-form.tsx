@@ -26,7 +26,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { z } from "zod";
 import { toast } from "sonner";
 
-import { signUp } from "@/server/users";
 import { authClient } from "@/lib/auth-client";
 import { Loader2 } from "lucide-react";
 
@@ -60,13 +59,19 @@ export function SignUpForm({
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const { success, message } = await signUp(data.username, data.email, data.password);
 
-    if (success) {
-      toast.success(message as string);
+    try {
+      await authClient.signUp.email({
+        email: data.email,
+        password: data.password,
+        name: data.username,
+      });
+
+      toast.success("Sign up successful");
       router.push("/dashboard");
-    } else {
-      toast.error(message as string)
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Sign up failed";
+      toast.error(errorMessage);
     }
 
     setIsLoading(false);
