@@ -24,8 +24,6 @@ export const SBHeader = () => {
     const router = useRouter()
 
     const { data: session, isPending } = authClient.useSession()
-    console.log(`useSession session: `, session);
-    console.log(`useSession isPending: `, isPending);
     const { scrollYProgress } = useScroll()
 
     const handleLogout = async () => {
