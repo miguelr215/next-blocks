@@ -27,7 +27,7 @@ export default function RootLayout({
         className={` antialiased`}
       >
         <SBHeader />
-        <main className="pt-20 md:pt-25 lg:pt-26.75 px-4 md:px-8 lg:px-12">
+        <main className="pt-20 md:pt-25 lg:pt-26.75 px-4 max-w-7xl mx-auto">
           {children}
           <Toaster />
         </main>
