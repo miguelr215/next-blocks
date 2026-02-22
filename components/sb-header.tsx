@@ -1,15 +1,17 @@
 "use client";
 
-import Link from 'next/link'
-import SmallLogo from './ui/smallLogo';
-import { Avatar } from '@/components/ui/avatar'
-import { LogOut, Menu, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useScroll } from 'motion/react'
 import { authClient } from '@/lib/auth-client'
+
+import SmallLogo from './ui/smallLogo';
+import { Avatar } from '@/components/ui/avatar'
+import { LogOut, Menu, X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 
 const menuItems = [
     { name: 'Sports', href: '/sports' },
@@ -128,6 +130,7 @@ export const SBHeader = () => {
                                         </Button>
                                     </>
                                 )}
+                                <AnimatedThemeToggler />
                             </div>
                         </div>
                     </div>
