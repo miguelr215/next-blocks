@@ -11,6 +11,7 @@ import SmallLogo from './ui/smallLogo';
 import { Avatar } from '@/components/ui/avatar'
 import { LogOut, Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 
 const menuItems = [
@@ -98,18 +99,32 @@ export const SBHeader = () => {
                                         <Link href="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-blue-900">
                                             ${session.user.accountBalance}
                                         </Link>
-                                        <Link
-                                            href="/dashboard"
-                                            className="flex items-center gap-2 rounded-full transition-opacity hover:opacity-80">
-                                            <Avatar src={session.user.image} name={session.user.name} className={session.user.bgColor} />
-                                        </Link>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={handleLogout}>
-                                            <LogOut className="size-4" />
-                                            <span className="sm:hidden lg:inline">Logout</span>
-                                        </Button>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Link
+                                                    href="/dashboard"
+                                                    className="flex items-center gap-2 rounded-full transition-opacity hover:opacity-80">
+                                                    <Avatar src={session.user.image} name={session.user.name} className={session.user.bgColor} />
+                                                </Link>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                Profile
+                                            </TooltipContent>
+                                        </Tooltip>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={handleLogout}
+                                                    className='cursor-pointer'>
+                                                    <LogOut className="size-4" />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                Logout
+                                            </TooltipContent>
+                                        </Tooltip>
                                     </>
                                 ) : (
                                     <>
@@ -130,7 +145,7 @@ export const SBHeader = () => {
                                         </Button>
                                     </>
                                 )}
-                                <AnimatedThemeToggler />
+                                <AnimatedThemeToggler className='cursor-pointer' />
                             </div>
                         </div>
                     </div>

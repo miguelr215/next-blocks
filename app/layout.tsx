@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/sonner"
+import { TooltipProvider } from "@/components/ui/tooltip"
 import "./globals.css";
 import { Montserrat } from "next/font/google";
 import { SBHeader } from "@/components/sb-header";
@@ -26,11 +27,13 @@ export default function RootLayout({
       <body
         className={` antialiased`}
       >
-        <SBHeader />
-        <main className="pt-20 md:pt-25 lg:pt-26.75 px-4 max-w-7xl mx-auto">
-          {children}
-          <Toaster />
-        </main>
+        <TooltipProvider>
+          <SBHeader />
+          <main className="pt-20 md:pt-25 lg:pt-26.75 px-4 max-w-7xl mx-auto">
+            {children}
+            <Toaster />
+          </main>
+        </TooltipProvider>
       </body>
     </html>
   );
