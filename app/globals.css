@@ -126,9 +126,13 @@
 	body {
 		@apply bg-background text-foreground;
 	}
+	.page-title {
+		@apply text-2xl md:text-3xl font-bold tracking-tight my-4 md:my-6;
+	}
 }
 
-::view-transition-old(root), ::view-transition-new(root) {
-    animation: none;
-    mix-blend-mode: normal;
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
 }
