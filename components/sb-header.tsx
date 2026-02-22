@@ -1,8 +1,8 @@
 "use client";
 
 import Link from 'next/link'
-import Image from 'next/image'
 import SmallLogo from './ui/smallLogo';
+import { Avatar } from '@/components/ui/avatar'
 import { LogOut, Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
@@ -13,7 +13,7 @@ import { authClient } from '@/lib/auth-client'
 
 const menuItems = [
     { name: 'Sports', href: '/sports' },
-    { name: 'Games', href: '/games' },
+    { name: 'My Games', href: '/dashboard/my-games' },
     { name: 'How To Play', href: '/how-to-play' },
     { name: 'About', href: '/about' }
 ]
@@ -99,19 +99,7 @@ export const SBHeader = () => {
                                         <Link
                                             href="/dashboard"
                                             className="flex items-center gap-2 rounded-full transition-opacity hover:opacity-80">
-                                            {session.user.image ? (
-                                                <Image
-                                                    src={session.user.image}
-                                                    alt={session.user.name ?? 'Profile'}
-                                                    width={32}
-                                                    height={32}
-                                                    className="size-8 rounded-full object-cover"
-                                                />
-                                            ) : (
-                                                <span className="flex size-8 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-                                                    {session.user.name?.charAt(0).toUpperCase() ?? '?'}
-                                                </span>
-                                            )}
+                                            <Avatar src={session.user.image} name={session.user.name} className='bg-green-600' />
                                         </Link>
                                         <Button
                                             variant="outline"
