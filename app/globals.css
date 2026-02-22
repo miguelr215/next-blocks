@@ -4,6 +4,9 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Safelist avatar background colors used dynamically from the database */
+@source inline("bg-primary bg-red-500 bg-red-700 bg-red-900 bg-orange-500 bg-orange-700 bg-orange-900 bg-yellow-500 bg-yellow-700 bg-yellow-900 bg-lime-500 bg-lime-700 bg-lime-900 bg-green-500 bg-green-700 bg-green-900 bg-cyan-500 bg-cyan-700 bg-cyan-900 bg-blue-500 bg-blue-700 bg-blue-900 bg-violet-500 bg-violet-700 bg-violet-900 bg-purple-500 bg-purple-700 bg-purple-900 bg-pink-500 bg-pink-700 bg-pink-900");
+
 @theme inline {
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);

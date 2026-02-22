@@ -35,6 +35,7 @@ export const user = pgTable("user", {
 	phoneNumber: text("phone_number"),
 	phoneVerified: boolean("phone_verified").default(false).notNull(),
 	image: text("image"),
+	bgColor: text("bg_color").default("bg-primary"),
 	role: userRoleEnum("user_role").default("USER").notNull(),
 	isActive: boolean("is_active").default(true).notNull(),
 	accountBalance: numeric("account_balance", { precision: 10, scale: 2 })
@@ -136,9 +137,7 @@ export const sportsGame = pgTable("sportsGame", {
 	homeTeamRecord: text("home_team_record").notNull(),
 	homeTeamColor: text("home_team_color").notNull(),
 	homeTeamLogo: text("home_team_logo").notNull(),
-	homeTeamScoreCurrent: integer("home_team_score_current")
-		.default(0)
-		.notNull(), // x-axis score
+	homeTeamScoreCurrent: integer("home_team_score_current").default(0).notNull(), // x-axis score
 	homeTeamScoreQ1: integer("home_team_score_q1").default(0).notNull(),
 	homeTeamScoreQ2: integer("home_team_score_q2").default(0).notNull(),
 	homeTeamScoreQ3: integer("home_team_score_q3").default(0).notNull(),
@@ -148,9 +147,7 @@ export const sportsGame = pgTable("sportsGame", {
 	awayTeamRecord: text("away_team_record").notNull(),
 	awayTeamColor: text("away_team_color").notNull(),
 	awayTeamLogo: text("away_team_logo").notNull(),
-	awayTeamScoreCurrent: integer("away_team_score_current")
-		.default(0)
-		.notNull(), // y-axis score
+	awayTeamScoreCurrent: integer("away_team_score_current").default(0).notNull(), // y-axis score
 	awayTeamScoreQ1: integer("away_team_score_q1").default(0).notNull(),
 	awayTeamScoreQ2: integer("away_team_score_q2").default(0).notNull(),
 	awayTeamScoreQ3: integer("away_team_score_q3").default(0).notNull(),

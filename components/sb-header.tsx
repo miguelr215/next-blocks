@@ -93,13 +93,13 @@ export const SBHeader = () => {
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:items-center sm:gap-3 sm:space-y-0 md:w-fit">
                                 {isPending ? null : session ? (
                                     <>
-                                        <span className="text-sm font-medium text-muted-foreground">
-                                            $420.69
-                                        </span>
+                                        <Link href="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-blue-900">
+                                            ${session.user.accountBalance}
+                                        </Link>
                                         <Link
                                             href="/dashboard"
                                             className="flex items-center gap-2 rounded-full transition-opacity hover:opacity-80">
-                                            <Avatar src={session.user.image} name={session.user.name} className='bg-green-600' />
+                                            <Avatar src={session.user.image} name={session.user.name} className={session.user.bgColor} />
                                         </Link>
                                         <Button
                                             variant="outline"
