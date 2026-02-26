@@ -132,6 +132,7 @@ export const sportsGame = pgTable("sportsGame", {
 	externalGameId: text("external_game_id").notNull().unique(),
 	sport: text("sport").notNull(),
 	league: text("league").notNull(),
+	name: text("name").notNull(),
 	homeTeamName: text("home_team_name").notNull(),
 	homeTeamAbbr: text("home_team_abbr").notNull(),
 	homeTeamRecord: text("home_team_record").notNull(),
@@ -152,8 +153,8 @@ export const sportsGame = pgTable("sportsGame", {
 	awayTeamScoreQ2: integer("away_team_score_q2").default(0).notNull(),
 	awayTeamScoreQ3: integer("away_team_score_q3").default(0).notNull(),
 	awayTeamScoreQ4: integer("away_team_score_q4").default(0).notNull(),
-	status: text("status").notNull(),
-	gameDate: timestamp("game_date").notNull(),
+	status: text("status").notNull(), // pre, in, post
+	gameDate: text("game_date").notNull(),
 	gameQuarter: integer("game_quarter").notNull(),
 	gameClock: text("game_clock").notNull(),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -176,7 +177,7 @@ export const blocksGame = pgTable(
 		prizeTotal: numeric("prize_total", { precision: 10, scale: 2 })
 			.default("0")
 			.notNull(),
-		allowsTouches: boolean("allows_touches").default(true).notNull(),
+		allowsTouches: boolean("allows_touches").default(false).notNull(),
 		prizeQ1: numeric("prize_q1", { precision: 10, scale: 2 })
 			.default("0")
 			.notNull(),
