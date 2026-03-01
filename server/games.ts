@@ -58,3 +58,30 @@ export const createBlocksGame = async (gameSettings: BlocksGameSettings) => {
 		};
 	}
 };
+
+// get all active blocks games by league
+export const getAllActiveBlocksGames = async (league: string) => {};
+
+// get block game by id
+export const getBlocksGameById = async (id: string) => {};
+
+// get all blocks games for a user
+export const getAllBlocksGamesForUser = async (userId: string) => {};
+
+// get all blocks games created by a user
+export const getAllBlocksGamesCreatedByUser = async (userId: string) => {};
+
+// update a blocks game
+export const updateBlocksGame = async (
+	id: string,
+	updates: Partial<BlocksGameSettings>,
+) => {};
+
+// ***************************************
+// TODO: FUNCTIONS FOR PHASE 2
+// delete a blocks game
+export const deleteBlocksGame = async (id: string) => {};
+
+// archive a blocks game
+export const archiveBlocksGame = async (id: string) => {};
+// ***************************************

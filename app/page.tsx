@@ -1,8 +1,11 @@
+import Hero from "@/components/hero";
+import HowToPlaySection from "@/components/how-to-play";
 
 export default function Home() {
   return (
     <div className="">
-      <h1 className="page-title">home page</h1>
+      <Hero />
+      <HowToPlaySection />
 
     </div>
   );

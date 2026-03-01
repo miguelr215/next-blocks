@@ -13,10 +13,25 @@
 	font-weight: 500;
 }
 
+.custom-spotlight-card {
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	align-items: center;
+	gap: 1.5rem;
+	padding: 1.5rem 2.5rem;
+}
+
 :is(.dark *).card-spotlight {
 	border-color: #222;
 	background-color: #111;
 	--spotlight-color: rgba(255, 255, 255, 0.05);
+}
+
+:is(.dark *).custom-spotlight-card {
+	border-color: #444;
+	background-color: #222;
+	/* --spotlight-color: rgba(255, 255, 255, 0.05); */
 }
 
 .card-spotlight::before {
