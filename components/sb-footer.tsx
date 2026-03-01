@@ -9,7 +9,13 @@ const footerItems = [
             { name: 'NHL', href: '/nhl' }
         ]
     },
-    { name: 'My Games', href: '/dashboard/my-games' },
+    {
+        name: 'Dashboard', href: '/dashboard', subNavs: [
+            { name: 'Profile', href: '/dashboard/profile' },
+            { name: 'My Games', href: '/dashboard/my-games' },
+            { name: 'Wallet', href: '/dashboard/wallet' },
+        ]
+    },
     { name: 'How To Play', href: '/how-to-play' },
     {
         name: 'About', href: '/about', subNavs: [

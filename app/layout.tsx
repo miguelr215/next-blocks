@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import "./globals.css";
 import { Montserrat } from "next/font/google";
 import { SBHeader } from "@/components/sb-header";
+import FooterSection from "@/components/footer";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -33,6 +34,7 @@ export default function RootLayout({
             {children}
             <Toaster />
           </main>
+          <FooterSection />
         </TooltipProvider>
       </body>
     </html>
