@@ -27,10 +27,6 @@ const HowToPlaySection = () => {
                     <p>Prizes automatically paid out for winning blocks!</p>
                 </SpotlightCard>
             </div>
-            <h2 className="page-subtitle font-bold sm:text-center">How To Win</h2>
-            <div>
-
-            </div>
         </section>
     )
 }
