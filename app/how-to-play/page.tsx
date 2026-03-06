@@ -5,11 +5,11 @@ import React from 'react'
 
 const HowToPlayPage = () => {
     return (
-        <div>
+        <>
             <HowToPlayHero />
             <HowToPlaySection />
             <HowToWinSection />
-        </div>
+        </>
     )
 }
 
