@@ -14,6 +14,7 @@ import { formatDatetoYYYYMMDD } from "@/lib/utils";
 import { createSportsGame } from "@/server/sports";
 import { createBlocksGame } from '@/server/games';
 import HoverGifCard from '@/components/HoverGifCard';
+import AvailableSports from '@/components/available-sports';
 
 const SportsPage = async () => {
     const startDate = new Date();
@@ -98,28 +99,7 @@ const SportsPage = async () => {
     return (
         <div>
             <h1 className="page-title">Sports</h1>
-            <ul className='flex flex-col gap-4 items-center sm:grid sm:grid-cols-2 sm:gap-6 lg:grid-cols-4'>
-                <li >
-                    <Link href="/sports/nfl" className='sm:flex sm:justify-end lg:justify-start'>
-                        <HoverGifCard image={footballImg.src} gif={footballGif.src} sport="Football" />
-                    </Link>
-                </li>
-                <li>
-                    <Link href="/sports/nba">
-                        <HoverGifCard image={basketballImg.src} gif={basketballGif.src} sport="Basketball" />
-                    </Link>
-                </li>
-                <li>
-                    <Link href="/sports/mlb" className='sm:flex sm:justify-end lg:justify-start'>
-                        <HoverGifCard image={baseballImg.src} gif={baseballGif.src} sport="Baseball" />
-                    </Link>
-                </li>
-                <li>
-                    <Link href="/sports/nhl">
-                        <HoverGifCard image={hockeyImg.src} gif={hockeyGif.src} sport="Hockey" />
-                    </Link>
-                </li>
-            </ul>
+            <AvailableSports />
         </div>
     )
 }
