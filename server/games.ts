@@ -1,7 +1,8 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { blocksGame } from "@/db/schema";
+import { blocksGame, sportsGame } from "@/db/schema";
+import { and, eq, gte, lte } from "drizzle-orm";
 import crypto from "node:crypto";
 
 type BlocksGameSettings = {
@@ -21,7 +22,7 @@ type BlocksGameSettings = {
 	prizePerTouchQ4: number;
 };
 
-// create a new blocks game
+// create a new blocks game ✅
 export const createBlocksGame = async (gameSettings: BlocksGameSettings) => {
 	try {
 		const newGame = await db
@@ -59,8 +60,62 @@ export const createBlocksGame = async (gameSettings: BlocksGameSettings) => {
 	}
 };
 
-// get all active blocks games by league
-export const getAllActiveBlocksGames = async (league: string) => {};
+// get all active blocks games by league ✅
+export const getAllActiveBlocksGames = async (league: string) => {
+	try {
+		const activeGames = await db
+			.select()
+			.from(blocksGame)
+			.innerJoin(sportsGame, eq(blocksGame.sportsGameId, sportsGame.id))
+			.where(and(eq(blocksGame.isActive, true), eq(sportsGame.league, league)));
+
+		return {
+			success: true,
+			message: "Active blocks games fetched successfully",
+			data: activeGames,
+		};
+	} catch (error) {
+		console.error("Error fetching active blocks games:", error);
+		return {
+			success: false,
+			message: `Error fetching active blocks games: ${(error as Error).message}`,
+		};
+	}
+};
+
+// get all active blocks games by league and date range
+export const getAllActiveBlocksGamesByDateRange = async (
+	league: string,
+	startDate: string,
+	endDate: string,
+) => {
+	try {
+		const activeGames = await db
+			.select()
+			.from(blocksGame)
+			.innerJoin(sportsGame, eq(blocksGame.sportsGameId, sportsGame.id))
+			.where(
+				and(
+					eq(blocksGame.isActive, true),
+					eq(sportsGame.league, league),
+					gte(sportsGame.gameDate, startDate),
+					lte(sportsGame.gameDate, endDate),
+				),
+			);
+
+		return {
+			success: true,
+			message: "Active blocks games fetched successfully",
+			data: activeGames,
+		};
+	} catch (error) {
+		console.error("Error fetching active blocks games by date range:", error);
+		return {
+			success: false,
+			message: `Error fetching active blocks games by date range: ${(error as Error).message}`,
+		};
+	}
+};
 
 // get block game by id
 export const getBlocksGameById = async (id: string) => {};

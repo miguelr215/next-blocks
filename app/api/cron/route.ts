@@ -3,9 +3,11 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
-import { getEventsBySportAndDateRange } from "@/server/sports";
 import { formatDatetoYYYYMMDD } from "@/lib/utils";
+import { getEventsBySportAndDateRange } from "@/server/sports";
 import { createBlocksGame } from "@/server/games";
+
+const leagues = ["nfl", "nba", "mlb", "nhl"];
 
 export const GET = async (request: NextRequest) => {
 	console.log("cron running");

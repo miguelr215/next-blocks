@@ -26,7 +26,7 @@ type GameSettings = {
 	status: string;
 };
 
-// get events by sport and date range
+// get events by sport and date range ✅
 export const getEventsBySportAndDateRange = async (
 	league: string,
 	startDate: string,
@@ -56,7 +56,7 @@ export const getEventsBySportAndDateRange = async (
 	}
 };
 
-// create a new sports game
+// create a new sports game ✅
 export const createSportsGame = async (gameSettings: GameSettings) => {
 	try {
 		const existingGame = await db
@@ -110,3 +110,18 @@ export const createSportsGame = async (gameSettings: GameSettings) => {
 		};
 	}
 };
+
+// update sports game
+export const updateSportsGame = async (
+	id: string,
+	updates: Partial<GameSettings>,
+) => {};
+
+// ***************************************
+// TODO: FUNCTIONS FOR PHASE 2
+
+// delete sports game
+
+// archive sports game
+
+// ***************************************
