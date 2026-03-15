@@ -242,8 +242,10 @@ export const block = pgTable(
 		})
 			.default("0")
 			.notNull(),
-		xValue: integer("x_value").default(0).notNull(), // home team x-axis
-		yValue: integer("y_value").default(0).notNull(), // away team y-axis
+		xCoordinate: integer("x_coordinate").default(0).notNull(), // position on the grid
+		yCoordinate: integer("y_coordinate").default(0).notNull(), // position on the grid
+		homeTeamScore: integer("home_team_score").default(0).notNull(), // score at time of purchase
+		awayTeamScore: integer("away_team_score").default(0).notNull(), // score at time of purchase
 		usedPromoCode: boolean("used_promo_code").default(false).notNull(),
 		promoCodeApplied: text("promo_code_applied"),
 		createdAt: timestamp("created_at").defaultNow().notNull(),

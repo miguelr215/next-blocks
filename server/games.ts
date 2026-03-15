@@ -1,9 +1,10 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { blocksGame, sportsGame } from "@/db/schema";
+import { block, blocksGame, sportsGame } from "@/db/schema";
 import { and, eq, gte, lte } from "drizzle-orm";
 import crypto from "node:crypto";
+import { createBlocks } from "./blocks";
 
 type BlocksGameSettings = {
 	sportsGameId: string;
@@ -22,7 +23,7 @@ type BlocksGameSettings = {
 	prizePerTouchQ4: number;
 };
 
-// create a new blocks game ✅
+// create a new blocks game in DB ✅
 export const createBlocksGame = async (gameSettings: BlocksGameSettings) => {
 	try {
 		const newGame = await db
@@ -46,9 +47,23 @@ export const createBlocksGame = async (gameSettings: BlocksGameSettings) => {
 			})
 			.returning();
 
+		const { success, message, data } = await createBlocks(
+			newGame[0].id,
+			gameSettings.pricePerBlock.toString(),
+		);
+
+		if (!success) {
+			return {
+				success: false,
+				message: `Error creating blocks: ${message}`,
+			};
+		}
+
+		console.log("blocks created: ", data);
+
 		return {
 			success: true,
-			message: "Blocks game created successfully",
+			message: "Blocks game & blocks created successfully",
 			data: newGame[0],
 		};
 	} catch (error) {
@@ -83,7 +98,7 @@ export const getAllActiveBlocksGames = async (league: string) => {
 	}
 };
 
-// get all active blocks games by league and date range
+// get all active blocks games by league and date range ✅
 export const getAllActiveBlocksGamesByDateRange = async (
 	league: string,
 	startDate: string,
@@ -117,8 +132,104 @@ export const getAllActiveBlocksGamesByDateRange = async (
 	}
 };
 
+/**
+ * Generates a shuffled array of digits 0-9 using Fisher-Yates shuffle.
+ * Each digit appears exactly once (non-repeating).
+ */
+const generateShuffledAxis = (): number[] => {
+	const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+	for (let i = numbers.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+	}
+	return numbers;
+};
+
+/**
+ * Generates random axis numbers for a blocks game and assigns them to all blocks.
+ * X-axis numbers map to homeTeamScore, Y-axis numbers map to awayTeamScore.
+ *
+ * @param blocksGameId - The ID of the blocks game to generate axis numbers for
+ * @returns Object with success status, message, and the generated axis arrays
+ */
+export const generateAxisNumbers = async (blocksGameId: string) => {
+	try {
+		const xAxisNumbers = generateShuffledAxis();
+		const yAxisNumbers = generateShuffledAxis();
+
+		// Update all blocks in a transaction — 20 queries total (10 per axis)
+		// Each query updates 10 blocks (all blocks sharing the same coordinate)
+		await db.transaction(async (tx) => {
+			const xAxisUpdates = xAxisNumbers.map((scoreValue, coordinate) =>
+				tx
+					.update(block)
+					.set({ homeTeamScore: scoreValue })
+					.where(
+						and(
+							eq(block.blocksGameId, blocksGameId),
+							eq(block.xCoordinate, coordinate),
+						),
+					),
+			);
+
+			const yAxisUpdates = yAxisNumbers.map((scoreValue, coordinate) =>
+				tx
+					.update(block)
+					.set({ awayTeamScore: scoreValue })
+					.where(
+						and(
+							eq(block.blocksGameId, blocksGameId),
+							eq(block.yCoordinate, coordinate),
+						),
+					),
+			);
+
+			await Promise.all([...xAxisUpdates, ...yAxisUpdates]);
+		});
+
+		return {
+			success: true,
+			message: "Axis numbers generated and blocks updated successfully",
+			data: { xAxisNumbers, yAxisNumbers },
+		};
+	} catch (error) {
+		console.error("Error generating axis numbers:", error);
+		return {
+			success: false,
+			message: `Error generating axis numbers: ${(error as Error).message}`,
+		};
+	}
+};
+
 // get block game by id
-export const getBlocksGameById = async (id: string) => {};
+export const getBlocksGameById = async (id: string) => {
+	try {
+		const result = await db
+			.select()
+			.from(blocksGame)
+			.innerJoin(sportsGame, eq(blocksGame.sportsGameId, sportsGame.id))
+			.where(eq(blocksGame.id, id));
+
+		if (result.length === 0) {
+			return {
+				success: false,
+				message: `Blocks game with id ${id} not found`,
+			};
+		}
+
+		return {
+			success: true,
+			message: "Blocks game fetched successfully",
+			data: result[0],
+		};
+	} catch (error) {
+		console.error("Error fetching blocks game:", error);
+		return {
+			success: false,
+			message: `Error fetching blocks game: ${(error as Error).message}`,
+		};
+	}
+};
 
 // get all blocks games for a user
 export const getAllBlocksGamesForUser = async (userId: string) => {};

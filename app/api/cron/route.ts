@@ -4,8 +4,10 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
 import { formatDatetoYYYYMMDD } from "@/lib/utils";
-import { getEventsBySportAndDateRange } from "@/server/sports";
-import { createBlocksGame } from "@/server/games";
+import {
+	createSportsGame,
+	getEventsBySportAndDateRange,
+} from "@/server/sports";
 
 const leagues = ["nfl", "nba", "mlb", "nhl"];
 
@@ -50,7 +52,7 @@ export const GET = async (request: NextRequest) => {
 			gameClock: game.status.displayClock,
 		};
 		console.log("gameSettings: ", gameSettings);
-		const { success, message, data } = await createBlocksGame(gameSettings);
+		const { success, message, data } = await createSportsGame(gameSettings);
 		if (success) {
 			console.log("Game created successfully:", data);
 		} else {

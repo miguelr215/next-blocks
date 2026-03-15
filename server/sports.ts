@@ -56,7 +56,7 @@ export const getEventsBySportAndDateRange = async (
 	}
 };
 
-// create a new sports game ✅
+// create a new sports game in DB ✅
 export const createSportsGame = async (gameSettings: GameSettings) => {
 	try {
 		const existingGame = await db
