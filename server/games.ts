@@ -6,6 +6,10 @@ import { and, eq, gte, lte } from "drizzle-orm";
 import crypto from "node:crypto";
 import { createBlocks } from "./blocks";
 
+import { createModuleLogger } from "@/logger.js";
+
+const logger = createModuleLogger("games-server");
+
 type BlocksGameSettings = {
 	sportsGameId: string;
 	isPrivate: boolean;
@@ -25,6 +29,8 @@ type BlocksGameSettings = {
 
 // create a new blocks game in DB ✅
 export const createBlocksGame = async (gameSettings: BlocksGameSettings) => {
+	logger.info(`createBlocksGame called with gameSettings: ${gameSettings}`);
+
 	try {
 		const newGame = await db
 			.insert(blocksGame)
@@ -47,19 +53,23 @@ export const createBlocksGame = async (gameSettings: BlocksGameSettings) => {
 			})
 			.returning();
 
+		logger.info(`created blocksGame newGame: ${newGame}`);
+
 		const { success, message, data } = await createBlocks(
 			newGame[0].id,
 			gameSettings.pricePerBlock.toString(),
 		);
 
 		if (!success) {
+			logger.error(`Error creating blocks: ${message}`);
+
 			return {
 				success: false,
 				message: `Error creating blocks: ${message}`,
 			};
 		}
 
-		console.log("blocks created: ", data);
+		logger.info(`blocks created: ${data}`);
 
 		return {
 			success: true,
@@ -67,7 +77,10 @@ export const createBlocksGame = async (gameSettings: BlocksGameSettings) => {
 			data: newGame[0],
 		};
 	} catch (error) {
-		console.error("Error creating blocks game:", error);
+		logger.error(
+			error instanceof Error ? error : String(error),
+			"Error creating blocks game",
+		);
 		return {
 			success: false,
 			message: `Error creating blocks game: ${(error as Error).message}`,
@@ -77,6 +90,8 @@ export const createBlocksGame = async (gameSettings: BlocksGameSettings) => {
 
 // get all active blocks games by league ✅
 export const getAllActiveBlocksGames = async (league: string) => {
+	logger.info(`getAllActiveBlocksGames called with league: ${league}`);
+
 	try {
 		const activeGames = await db
 			.select()
@@ -84,13 +99,18 @@ export const getAllActiveBlocksGames = async (league: string) => {
 			.innerJoin(sportsGame, eq(blocksGame.sportsGameId, sportsGame.id))
 			.where(and(eq(blocksGame.isActive, true), eq(sportsGame.league, league)));
 
+		logger.info(`activeGames: ${activeGames}`);
+
 		return {
 			success: true,
 			message: "Active blocks games fetched successfully",
 			data: activeGames,
 		};
 	} catch (error) {
-		console.error("Error fetching active blocks games:", error);
+		logger.error(
+			error instanceof Error ? error : String(error),
+			"Error fetching active blocks games",
+		);
 		return {
 			success: false,
 			message: `Error fetching active blocks games: ${(error as Error).message}`,
@@ -104,6 +124,10 @@ export const getAllActiveBlocksGamesByDateRange = async (
 	startDate: string,
 	endDate: string,
 ) => {
+	logger.info(
+		`getAllActiveBlocksGamesByDateRange called with league: ${league}, startDate: ${startDate}, endDate: ${endDate}`,
+	);
+
 	try {
 		const activeGames = await db
 			.select()
@@ -118,13 +142,18 @@ export const getAllActiveBlocksGamesByDateRange = async (
 				),
 			);
 
+		logger.info(`activeGames: ${activeGames}`);
+
 		return {
 			success: true,
 			message: "Active blocks games fetched successfully",
 			data: activeGames,
 		};
 	} catch (error) {
-		console.error("Error fetching active blocks games by date range:", error);
+		logger.error(
+			error instanceof Error ? error : String(error),
+			"Error fetching active blocks games by date range",
+		);
 		return {
 			success: false,
 			message: `Error fetching active blocks games by date range: ${(error as Error).message}`,
@@ -137,11 +166,13 @@ export const getAllActiveBlocksGamesByDateRange = async (
  * Each digit appears exactly once (non-repeating).
  */
 const generateShuffledAxis = (): number[] => {
+	logger.info(`generateShuffledAxis called...`);
 	const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 	for (let i = numbers.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
 		[numbers[i], numbers[j]] = [numbers[j], numbers[i]];
 	}
+	logger.info(`generateShuffledAxis numbers: ${numbers}`);
 	return numbers;
 };
 
@@ -153,6 +184,8 @@ const generateShuffledAxis = (): number[] => {
  * @returns Object with success status, message, and the generated axis arrays
  */
 export const generateAxisNumbers = async (blocksGameId: string) => {
+	logger.info(`generateAxisNumbers called with blocksGameId: ${blocksGameId}`);
+
 	try {
 		const xAxisNumbers = generateShuffledAxis();
 		const yAxisNumbers = generateShuffledAxis();
@@ -187,13 +220,18 @@ export const generateAxisNumbers = async (blocksGameId: string) => {
 			await Promise.all([...xAxisUpdates, ...yAxisUpdates]);
 		});
 
+		logger.info(`Axis numbers generated and blocks updated successfully`);
+
 		return {
 			success: true,
 			message: "Axis numbers generated and blocks updated successfully",
 			data: { xAxisNumbers, yAxisNumbers },
 		};
 	} catch (error) {
-		console.error("Error generating axis numbers:", error);
+		logger.error(
+			error instanceof Error ? error : String(error),
+			"Error generating axis numbers",
+		);
 		return {
 			success: false,
 			message: `Error generating axis numbers: ${(error as Error).message}`,
@@ -203,6 +241,8 @@ export const generateAxisNumbers = async (blocksGameId: string) => {
 
 // get block game by id
 export const getBlocksGameById = async (id: string) => {
+	logger.info(`getBlocksGameById called with id: ${id}`);
+
 	try {
 		const result = await db
 			.select()
@@ -211,11 +251,14 @@ export const getBlocksGameById = async (id: string) => {
 			.where(eq(blocksGame.id, id));
 
 		if (result.length === 0) {
+			logger.info(`Blocks game with id ${id} not found`);
 			return {
 				success: false,
 				message: `Blocks game with id ${id} not found`,
 			};
 		}
+
+		logger.info(`Blocks game with id ${id} found: ${result[0]}`);
 
 		return {
 			success: true,
@@ -223,7 +266,10 @@ export const getBlocksGameById = async (id: string) => {
 			data: result[0],
 		};
 	} catch (error) {
-		console.error("Error fetching blocks game:", error);
+		logger.error(
+			error instanceof Error ? error : String(error),
+			"Error fetching blocks game",
+		);
 		return {
 			success: false,
 			message: `Error fetching blocks game: ${(error as Error).message}`,

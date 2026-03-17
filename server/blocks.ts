@@ -4,6 +4,10 @@ import { db } from "@/db/drizzle";
 import { block, blocksGame, winner } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
+import { createModuleLogger } from "@/logger.js";
+
+const logger = createModuleLogger("blocks-server");
+
 type Block = {
 	id: string;
 	isPurchased: boolean;
@@ -24,6 +28,10 @@ export const createBlocks = async (
 	blocksGameId: string,
 	pricePerBlock: string,
 ) => {
+	logger.info(
+		`createBlocks called with blocksGameId: ${blocksGameId} and pricePerBlock: ${pricePerBlock}`,
+	);
+
 	try {
 		// Generate 100 blocks for a 10x10 grid
 		const blocksToInsert = [];
@@ -39,7 +47,11 @@ export const createBlocks = async (
 			}
 		}
 
+		logger.info(`blocksToInsert: ${blocksToInsert}`);
+
 		const newBlocks = await db.insert(block).values(blocksToInsert).returning();
+
+		logger.info(`newBlocks: ${newBlocks}`);
 
 		return {
 			success: true,
@@ -47,7 +59,10 @@ export const createBlocks = async (
 			data: newBlocks,
 		};
 	} catch (error) {
-		console.error("Error creating blocks:", error);
+		logger.error(
+			error instanceof Error ? error : String(error),
+			"Error creating blocks",
+		);
 		return {
 			success: false,
 			message: `Error creating blocks: ${(error as Error).message}`,
@@ -66,11 +81,15 @@ export const getAllBlocksForUser = async (userId: string) => {};
 
 // get all blocks for a game
 export const getAllBlocksForGame = async (blocksGameId: string) => {
+	logger.info(`getAllBlocksForGame called with blocksGameId: ${blocksGameId}`);
+
 	try {
 		const blocks = await db
 			.select()
 			.from(block)
 			.where(eq(block.blocksGameId, blocksGameId));
+
+		logger.info(`blocks: ${blocks}`);
 
 		return {
 			success: true,
@@ -78,7 +97,10 @@ export const getAllBlocksForGame = async (blocksGameId: string) => {
 			data: blocks,
 		};
 	} catch (error) {
-		console.error("Error fetching blocks for game:", error);
+		logger.error(
+			error instanceof Error ? error : String(error),
+			"Error fetching blocks for game",
+		);
 		return {
 			success: false,
 			message: `Error fetching blocks for game: ${(error as Error).message}`,

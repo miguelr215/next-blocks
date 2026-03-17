@@ -5,6 +5,10 @@ import { sportsGame } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import crypto from "node:crypto";
 
+import { createModuleLogger } from "@/logger.js";
+
+const logger = createModuleLogger("sports-server");
+
 type GameSettings = {
 	externalGameId: string;
 	sport: string;
@@ -32,6 +36,10 @@ export const getEventsBySportAndDateRange = async (
 	startDate: string,
 	endDate: string,
 ) => {
+	logger.info(
+		`getEventsBySportAndDateRange called with league: ${league}, startDate: ${startDate}, endDate: ${endDate}`,
+	);
+
 	let sport = "";
 	if (league === "nba") {
 		sport = "basketball";
@@ -48,16 +56,22 @@ export const getEventsBySportAndDateRange = async (
 			`https://site.api.espn.com/apis/site/v2/sports/${sport}/${league}/scoreboard?limit=1000&dates=${startDate}-${endDate}`,
 		);
 		const data = await response.json();
-		// console.log(`league: ${league}, sport: ${sport}, data: `, data);
+		logger.info("data.events: ", data.events);
+
 		return data.events || [];
 	} catch (error) {
-		console.error("Error fetching sports:", error);
+		logger.error(
+			error instanceof Error ? error : String(error),
+			"Error fetching sports",
+		);
 		throw error;
 	}
 };
 
 // create a new sports game in DB ✅
 export const createSportsGame = async (gameSettings: GameSettings) => {
+	logger.info(`createSportsGame called with gameSettings: ${gameSettings}`);
+
 	try {
 		const existingGame = await db
 			.select()
@@ -97,16 +111,21 @@ export const createSportsGame = async (gameSettings: GameSettings) => {
 			})
 			.returning();
 
+		logger.info(`created sportsGame newGame: ${newGame}`);
+
 		return {
 			success: true,
 			message: "Game created successfully",
 			data: newGame[0],
 		};
 	} catch (error) {
-		console.error("Error creating blocks game:", error);
+		logger.error(
+			error instanceof Error ? error : String(error),
+			"Error creating sports game",
+		);
 		return {
 			success: false,
-			message: `Error creating game: ${(error as Error).message}`,
+			message: `Error creating sports game: ${(error as Error).message}`,
 		};
 	}
 };
