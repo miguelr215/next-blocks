@@ -252,9 +252,7 @@ export const block = pgTable(
 		updatedAt: timestamp("updated_at")
 			.$onUpdate(() => /* @__PURE__ */ new Date())
 			.notNull(),
-		userId: text("user_id")
-			.default("")
-			.references(() => user.id, { onDelete: "cascade" }),
+		userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
 		blocksGameId: text("blocks_game_id")
 			.notNull()
 			.references(() => blocksGame.id, { onDelete: "cascade" }),

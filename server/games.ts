@@ -55,6 +55,7 @@ export const createBlocksGame = async (gameSettings: BlocksGameSettings) => {
 
 		logger.info(`created blocksGame newGame: ${newGame}`);
 
+		// Create 100 blocks for the new game
 		const { success, message, data } = await createBlocks(
 			newGame[0].id,
 			gameSettings.pricePerBlock.toString(),

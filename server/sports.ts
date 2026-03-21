@@ -56,7 +56,7 @@ export const getEventsBySportAndDateRange = async (
 			`https://site.api.espn.com/apis/site/v2/sports/${sport}/${league}/scoreboard?limit=1000&dates=${startDate}-${endDate}`,
 		);
 		const data = await response.json();
-		logger.info("data.events: ", data.events);
+		logger.info(`data.events: ${data.events}`);
 
 		return data.events || [];
 	} catch (error) {
