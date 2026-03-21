@@ -67,22 +67,38 @@ const BlocksGameCard = ({ game }: BlocksGameCardProps) => {
                     </div>
                 </div>
                 <div className='p-4 text-center flex flex-col justify-between'>
-                    <div>
-                        <p>
-                            {game.sportsGame.awayTeamName} <span className="text-xs text-gray-600">({game.sportsGame.awayTeamRecord})</span>
+                    <div className='space-y-1'>
+                        <div>
+                            <p className='font-bold'>
+                                {game.sportsGame.awayTeamName} <span className="text-xs text-gray-600 font-normal">({game.sportsGame.awayTeamRecord})</span>
+                            </p>
+                            <span className='font-bold'>@</span>
+                            <p className='font-bold'>
+                                {game.sportsGame.homeTeamName} <span className="text-xs text-gray-600 font-normal">({game.sportsGame.homeTeamRecord})</span>
+                            </p>
+                        </div>
+                        <hr />
+                        <p className='text-xs text-gray-300 truncate line-clamp-1'>
+                            ID: {game.sportsGame.id}
                         </p>
-                        @
-                        <p className=' mb-1'>
-                            {game.sportsGame.homeTeamName} <span className="text-xs text-gray-600">({game.sportsGame.homeTeamRecord})</span>
+                        <p className="text-sm">
+                            {new Date(game.sportsGame.gameDate).toLocaleDateString("en-US", {
+                                weekday: "short",
+                                month: "short",
+                                day: "numeric",
+                                hour: "numeric",
+                                minute: "2-digit",
+                                timeZoneName: "short"
+                            })}
                         </p>
-                        <p className='text-xs mb-1'>
-                            Blocks: {game.blocksGame.blocksSold} / 100
+                        <p className='text-sm'>
+                            <span className='font-semibold'>Blocks:</span> {game.blocksGame.blocksSold} / 100
                         </p>
-                        <p className='text-xs mb-1'>
-                            Price: ${game.blocksGame.pricePerBlock}
+                        <p className='text-sm'>
+                            <span className='font-semibold'>Price:</span> ${game.blocksGame.pricePerBlock} / block
                         </p>
                     </div>
-                    <div className="cta-wrapper">
+                    <div className="mt-4">
                         <Button variant="default" size="sm" className='cursor-pointer'>Play Now</Button>
                     </div>
                 </div>
