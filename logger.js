@@ -1,6 +1,9 @@
+import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
 import pino from "pino";
 
-const __dirname = import.meta.dirname;
+const __dirname =
+	import.meta.dirname ?? dirname(fileURLToPath(import.meta.url));
 
 const transport = pino.transport({
 	targets: [
