@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import FullLogo from './ui/fullLogo'
+import ElectricBorder from './ElectricBorder'
 
 const Hero = () => {
     return (
@@ -13,9 +14,16 @@ const Hero = () => {
                     <Link href="/login" className='cta-link-btn hover:bg-yellow-600'>Login</Link>
                 </div>
             </div>
-            <div className="hero-img w-full max-w-full sm:max-w-fit sm:mx-auto">
-                <FullLogo />
-            </div>
+            <ElectricBorder
+                color="#193cb8"
+                speed={1}
+                chaos={0.25}
+                className={'hero-img-border'}
+                style={{ borderRadius: 16 }}>
+                <div className="hero-img w-full max-w-full sm:max-w-fit sm:mx-auto">
+                    <FullLogo />
+                </div>
+            </ElectricBorder>
         </section>
     )
 }
