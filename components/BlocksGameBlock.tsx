@@ -1,16 +1,8 @@
 import { cn } from '@/lib/utils';
+import type { Block } from '@/lib/types';
 
 interface BlocksGameBlockProps {
-    block: {
-        id: string;
-        isPurchased: boolean;
-        blockPrice: string;
-        xCoordinate: number;
-        yCoordinate: number;
-        homeTeamScore: number;
-        awayTeamScore: number;
-        userId: string | null;
-    };
+    block: Block;
 }
 
 const BlocksGameBlock = ({ block }: BlocksGameBlockProps) => {

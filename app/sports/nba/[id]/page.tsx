@@ -2,6 +2,7 @@ import BlocksGameGrid from "@/components/BlocksGameGrid";
 import { getBlocksGameById } from "@/server/games";
 import { getAllBlocksForGame } from "@/server/blocks";
 import Image from "next/image";
+import Link from "next/link";
 
 interface NBABlockGamePageProps {
     params: Promise<{ id: string }>;
@@ -19,7 +20,8 @@ const NBABlockGamePage = async ({ params }: NBABlockGamePageProps) => {
         return (
             <div>
                 <h1 className="page-title">Game Not Found</h1>
-                <p>{gameResult.message}</p>
+                <Link href="/sports/nba">Back to Games</Link>
+                <p className="mt-8">{gameResult.message}</p>
             </div>
         );
     }
@@ -28,7 +30,8 @@ const NBABlockGamePage = async ({ params }: NBABlockGamePageProps) => {
         return (
             <div>
                 <h1 className="page-title">Error Loading Blocks</h1>
-                <p>{blocksResult.message}</p>
+                <Link href="/sports/nba">Back to Games</Link>
+                <p className="mt-8">{blocksResult.message}</p>
             </div>
         );
     }
@@ -65,10 +68,8 @@ const NBABlockGamePage = async ({ params }: NBABlockGamePageProps) => {
             {/* Blocks grid */}
             <BlocksGameGrid
                 blocks={blocksResult.data}
-                homeTeamAbbr={sportsGame.homeTeamAbbr}
-                awayTeamAbbr={sportsGame.awayTeamAbbr}
-                homeTeamColor={sportsGame.homeTeamColor}
-                awayTeamColor={sportsGame.awayTeamColor}
+                sportsGame={sportsGame}
+                blocksGame={blocksGame}
             />
         </div>
     );

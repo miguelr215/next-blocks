@@ -1,54 +1,14 @@
-import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import Image from 'next/image';
 import vsImg from '@/public/vs.png';
 import { Button } from './ui/button';
+import type { BlocksGame, SportsGame } from '@/lib/types';
 
 interface BlocksGameCardProps {
     game: {
-        blocksGame: {
-            id: string;
-            sportsGameId: string;
-            isActive: boolean;
-            isPrivate: boolean;
-            createdBy: string;
-            pricePerBlock: string;
-            blocksSold: number;
-            prizeTotal: string;
-            allowsTouches: boolean;
-            prizeQ1: string;
-            prizePerTouchQ1: string;
-            prizeQ2: string;
-            prizePerTouchQ2: string;
-            prizeQ3: string;
-            prizePerTouchQ3: string;
-            prizeQ4: string;
-            prizePerTouchQ4: string;
-            createdAt: Date;
-            updatedAt: Date;
-        }
-        sportsGame: {
-            id: string;
-            externalGameId: string;
-            sport: string;
-            league: string;
-            name: string;
-            homeTeamName: string;
-            homeTeamAbbr: string;
-            homeTeamRecord: string;
-            homeTeamColor: string;
-            homeTeamLogo: string;
-            awayTeamName: string;
-            awayTeamAbbr: string;
-            awayTeamRecord: string;
-            awayTeamColor: string;
-            awayTeamLogo: string;
-            status: string;
-            gameDate: string;
-            gameQuarter: number;
-            gameClock: string;
-        }
-    }
+        blocksGame: BlocksGame;
+        sportsGame: SportsGame;
+    };
 }
 
 const BlocksGameCard = ({ game }: BlocksGameCardProps) => {

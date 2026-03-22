@@ -24,7 +24,7 @@ const sports = {
 const NUM_OF_DAYS = 1;
 
 // Cron to create initial block games ✅
-export const GET = async (request: NextRequest) => {
+export const GET = async (_request: NextRequest) => {
 	logger.info("cron-create-games running");
 
 	const startDate = new Date();

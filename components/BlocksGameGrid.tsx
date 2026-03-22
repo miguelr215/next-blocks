@@ -1,76 +1,80 @@
 import BlocksGameBlock from './BlocksGameBlock';
-
-interface Block {
-    id: string;
-    isPurchased: boolean;
-    blockPrice: string;
-    xCoordinate: number;
-    yCoordinate: number;
-    homeTeamScore: number;
-    awayTeamScore: number;
-    userId: string | null;
-}
+import type { Block, SportsGame, BlocksGame } from '@/lib/types';
 
 interface BlocksGameGridProps {
     blocks: Block[];
-    homeTeamAbbr: string;
-    awayTeamAbbr: string;
-    homeTeamColor: string;
-    awayTeamColor: string;
+    sportsGame: SportsGame;
+    blocksGame: BlocksGame;
 }
 
-const BlocksGameGrid = ({ blocks, homeTeamAbbr, awayTeamAbbr, homeTeamColor, awayTeamColor }: BlocksGameGridProps) => {
+const BlocksGameGrid = ({ blocks, sportsGame, blocksGame }: BlocksGameGridProps) => {
     // Build a 10x10 lookup: grid[y][x]
     const grid: (Block | undefined)[][] = Array.from({ length: 10 }, () => Array(10).fill(undefined));
     for (const b of blocks) {
         grid[b.yCoordinate][b.xCoordinate] = b;
     }
 
-    const axisNumbers = Array.from({ length: 10 }, (_, i) => i);
+    // Derive axis numbers from block data
+    // Each block at xCoordinate=N has the shuffled homeTeamScore for that column
+    // Each block at yCoordinate=N has the shuffled awayTeamScore for that row
+    const coordinates = Array.from({ length: 10 }, (_, i) => i);
+
+    const xAxisNumbers = coordinates.map((coord) => {
+        const block = blocks.find(b => b.xCoordinate === coord);
+        return block?.homeTeamScore ?? coord;
+    });
+
+    const yAxisNumbers = coordinates.map((coord) => {
+        const block = blocks.find(b => b.yCoordinate === coord);
+        return block?.awayTeamScore ?? coord;
+    });
 
     return (
         <div className="w-full max-w-2xl mx-auto">
-            {/* Away team label (top / x-axis) */}
-            <div className="text-center font-bold text-sm mb-1" style={{ color: `#${awayTeamColor}` }}>
-                {awayTeamAbbr}
+            {/* Home team label (top / x-axis) */}
+            <div className="text-center font-bold text-sm mb-1" style={{ color: `#${sportsGame.homeTeamColor}` }}>
+                {sportsGame.homeTeamAbbr}
             </div>
 
-            <div className="grid grid-cols-[auto_repeat(10,1fr)] gap-0.5">
-                {/* Top-left empty corner */}
-                <div />
+            <div className=''>
+                <div className="grid grid-cols-[auto_repeat(10,1fr)] gap-0.5">
+                    {/* Top-left empty corner */}
+                    <div />
 
-                {/* X-axis header numbers (columns) */}
-                {axisNumbers.map((n) => (
-                    <div key={`x-${n}`} className="flex items-center justify-center text-xs font-semibold">
-                        {n}
-                    </div>
-                ))}
-
-                {/* Grid rows */}
-                {axisNumbers.map((y) => (
-                    <>
-                        {/* Y-axis header number */}
-                        <div key={`y-${y}`} className="flex items-center justify-center text-xs font-semibold pr-1">
-                            {y}
+                    {/* X-axis header numbers (columns) */}
+                    {xAxisNumbers.map((n, i) => (
+                        <div key={`x-${i}`} className="flex items-center justify-center text-xs font-semibold">
+                            {blocksGame.axisNumbersGenerated ? n : "?"}
                         </div>
+                    ))}
 
-                        {/* Row blocks */}
-                        {axisNumbers.map((x) => {
-                            const b = grid[y][x];
-                            return b ? (
-                                <BlocksGameBlock key={b.id} block={b} />
-                            ) : (
-                                <div key={`empty-${x}-${y}`} className="aspect-square border border-gray-300 rounded-sm" />
-                            );
-                        })}
-                    </>
-                ))}
+                    {/* Grid rows */}
+                    {coordinates.map((y) => (
+                        <>
+                            {/* Y-axis header number */}
+                            <div key={`y-${y}`} className="flex items-center justify-center text-xs font-semibold pr-1">
+                                {blocksGame.axisNumbersGenerated ? yAxisNumbers[y] : "?"}
+                            </div>
+
+                            {/* Row blocks */}
+                            {coordinates.map((x) => {
+                                const b = grid[y][x];
+                                return b ? (
+                                    <BlocksGameBlock key={b.id} block={b} />
+                                ) : (
+                                    <div key={`empty-${x}-${y}`} className="aspect-square border border-gray-300 rounded-sm" />
+                                );
+                            })}
+                        </>
+                    ))}
+                </div>
+
+                {/* Away team label (left / y-axis) */}
+                <div className="text-center font-bold text-sm mt-1 [writing-mode:vertical-rl]" style={{ color: `#${sportsGame.awayTeamColor}` }}>
+                    {sportsGame.awayTeamAbbr}
+                </div>
             </div>
 
-            {/* Home team label (left / y-axis) */}
-            <div className="text-center font-bold text-sm mt-1" style={{ color: `#${homeTeamColor}` }}>
-                {homeTeamAbbr}
-            </div>
         </div>
     );
 };

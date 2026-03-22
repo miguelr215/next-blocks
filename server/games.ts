@@ -7,25 +7,9 @@ import crypto from "node:crypto";
 import { createBlocks } from "./blocks";
 
 import { createModuleLogger } from "@/logger.js";
+import type { BlocksGameSettings } from "@/lib/types";
 
 const logger = createModuleLogger("games-server");
-
-type BlocksGameSettings = {
-	sportsGameId: string;
-	isPrivate: boolean;
-	createdBy: string;
-	pricePerBlock: number;
-	allowsTouches: boolean;
-	prizeTotal: number;
-	prizeQ1: number;
-	prizePerTouchQ1: number;
-	prizeQ2: number;
-	prizePerTouchQ2: number;
-	prizeQ3: number;
-	prizePerTouchQ3: number;
-	prizeQ4: number;
-	prizePerTouchQ4: number;
-};
 
 // create a new blocks game in DB ✅
 export const createBlocksGame = async (gameSettings: BlocksGameSettings) => {
@@ -178,6 +162,44 @@ const generateShuffledAxis = (): number[] => {
 };
 
 /**
+ * Updates the blocksGame record to set axisNumbersGenerated to true.
+ *
+ * @param blocksGameId - The ID of the blocks game to update
+ * @returns Object with success status and message
+ */
+const updateBlocksGameAxisNumbersGenerated = async (blocksGameId: string) => {
+	logger.info(
+		`updateBlocksGameAxisNumbersGenerated called with blocksGameId: ${blocksGameId}`,
+	);
+
+	try {
+		await db
+			.update(blocksGame)
+			.set({ axisNumbersGenerated: true })
+			.where(eq(blocksGame.id, blocksGameId));
+
+		logger.info(
+			`axisNumbersGenerated set to true for blocksGameId: ${blocksGameId}`,
+		);
+
+		return {
+			success: true,
+			message: "axisNumbersGenerated updated successfully",
+		};
+	} catch (error) {
+		logger.error(
+			error instanceof Error ? error : String(error),
+			"Error updating axisNumbersGenerated",
+		);
+		return {
+			success: false,
+			message: `Error updating axisNumbersGenerated: ${(error as Error).message}`,
+		};
+	}
+};
+
+// TODO: this function is ready to test ⬇️
+/**
  * Generates random axis numbers for a blocks game and assigns them to all blocks.
  * X-axis numbers map to homeTeamScore, Y-axis numbers map to awayTeamScore.
  *
@@ -191,35 +213,48 @@ export const generateAxisNumbers = async (blocksGameId: string) => {
 		const xAxisNumbers = generateShuffledAxis();
 		const yAxisNumbers = generateShuffledAxis();
 
-		// Update all blocks in a transaction — 20 queries total (10 per axis)
+		// Run 20 update queries in parallel — 10 per axis
 		// Each query updates 10 blocks (all blocks sharing the same coordinate)
-		await db.transaction(async (tx) => {
-			const xAxisUpdates = xAxisNumbers.map((scoreValue, coordinate) =>
-				tx
-					.update(block)
-					.set({ homeTeamScore: scoreValue })
-					.where(
-						and(
-							eq(block.blocksGameId, blocksGameId),
-							eq(block.xCoordinate, coordinate),
-						),
+		// NOTE: neon-http driver does not support transactions, so we use Promise.all instead
+		const xAxisUpdates = xAxisNumbers.map((scoreValue, coordinate) =>
+			db
+				.update(block)
+				.set({ homeTeamScore: scoreValue })
+				.where(
+					and(
+						eq(block.blocksGameId, blocksGameId),
+						eq(block.xCoordinate, coordinate),
 					),
-			);
+				),
+		);
 
-			const yAxisUpdates = yAxisNumbers.map((scoreValue, coordinate) =>
-				tx
-					.update(block)
-					.set({ awayTeamScore: scoreValue })
-					.where(
-						and(
-							eq(block.blocksGameId, blocksGameId),
-							eq(block.yCoordinate, coordinate),
-						),
+		const yAxisUpdates = yAxisNumbers.map((scoreValue, coordinate) =>
+			db
+				.update(block)
+				.set({ awayTeamScore: scoreValue })
+				.where(
+					and(
+						eq(block.blocksGameId, blocksGameId),
+						eq(block.yCoordinate, coordinate),
 					),
-			);
+				),
+		);
 
-			await Promise.all([...xAxisUpdates, ...yAxisUpdates]);
-		});
+		await Promise.all([...xAxisUpdates, ...yAxisUpdates]);
+
+		// Mark the blocks game as having axis numbers generated
+		const updateResult =
+			await updateBlocksGameAxisNumbersGenerated(blocksGameId);
+
+		if (!updateResult.success) {
+			logger.error(
+				`Failed to update axisNumbersGenerated: ${updateResult.message}`,
+			);
+			return {
+				success: false,
+				message: `Axis numbers assigned but failed to update axisNumbersGenerated flag: ${updateResult.message}`,
+			};
+		}
 
 		logger.info(`Axis numbers generated and blocks updated successfully`);
 
@@ -240,6 +275,7 @@ export const generateAxisNumbers = async (blocksGameId: string) => {
 	}
 };
 
+// TODO: this function is ready to test ⬇️
 // get block game by id
 export const getBlocksGameById = async (id: string) => {
 	logger.info(`getBlocksGameById called with id: ${id}`);

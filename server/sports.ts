@@ -6,29 +6,9 @@ import { eq } from "drizzle-orm";
 import crypto from "node:crypto";
 
 import { createModuleLogger } from "@/logger.js";
+import type { GameSettings } from "@/lib/types";
 
 const logger = createModuleLogger("sports-server");
-
-type GameSettings = {
-	externalGameId: string;
-	sport: string;
-	league: string;
-	name: string;
-	homeTeamName: string;
-	homeTeamAbbr: string;
-	homeTeamRecord: string;
-	homeTeamColor: string;
-	homeTeamLogo: string;
-	awayTeamName: string;
-	awayTeamAbbr: string;
-	awayTeamRecord: string;
-	awayTeamColor: string;
-	awayTeamLogo: string;
-	gameDate: string;
-	gameQuarter: number;
-	gameClock: string;
-	status: string;
-};
 
 // get events by sport and date range ✅
 export const getEventsBySportAndDateRange = async (

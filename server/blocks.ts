@@ -5,23 +5,9 @@ import { block, blocksGame, winner } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 import { createModuleLogger } from "@/logger.js";
+import type { Block } from "@/lib/types";
 
 const logger = createModuleLogger("blocks-server");
-
-type Block = {
-	id: string;
-	isPurchased: boolean;
-	blockPrice: number;
-	purchaseAmt: number;
-	usedPromoCode: boolean;
-	promoCodeApplied: string;
-	userId: string;
-	blocksGameId: string;
-	xCoordinate: number;
-	yCoordinate: number;
-	homeTeamScore: number;
-	awayTeamScore: number;
-};
 
 // create 100 blocks for a game
 export const createBlocks = async (

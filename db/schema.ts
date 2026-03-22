@@ -214,6 +214,9 @@ export const blocksGame = pgTable(
 		})
 			.default("0")
 			.notNull(),
+		axisNumbersGenerated: boolean("axis_numbers_generated")
+			.default(false)
+			.notNull(),
 		createdAt: timestamp("created_at").defaultNow().notNull(),
 		updatedAt: timestamp("updated_at")
 			.$onUpdate(() => /* @__PURE__ */ new Date())
