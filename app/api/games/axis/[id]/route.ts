@@ -4,12 +4,13 @@ import { NextResponse } from "next/server";
 import { type NextRequest } from "next/server";
 
 import { createModuleLogger } from "@/logger.js";
-import { generateAxisNumbers } from "@/server/games";
+import { generateAxisNumbers, getBlocksGameById } from "@/server/games";
 
 const logger = createModuleLogger("api-games-axis");
 
+// TODO: need to create a scheduled queue to call this endpoint
 /**
- * Generates random axis numbers for a blocks game via the game ID.
+ * Generates random axis numbers for a blocks game via the game ID. ✅
  *
  * @param request - The incoming request
  * @param params - Route params containing the blocks game ID
@@ -31,6 +32,25 @@ export const GET = async (
 	}
 
 	try {
+		const gameResult = await getBlocksGameById(id);
+
+		if (!gameResult.success || !gameResult.data) {
+			logger.error(`Blocks game not found for id: ${id}`);
+			return NextResponse.json(
+				{ message: `Blocks game not found for id: ${id}` },
+				{ status: 400 },
+			);
+		}
+
+		// Check if axis numbers have already been generated, only allow once per block game
+		if (gameResult.data.blocksGame.axisNumbersGenerated) {
+			logger.error(`Axis numbers already generated for blocksGameId: ${id}`);
+			return NextResponse.json(
+				{ message: "Axis numbers have already been generated for this game" },
+				{ status: 400 },
+			);
+		}
+
 		const result = await generateAxisNumbers(id);
 
 		if (!result.success) {
