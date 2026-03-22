@@ -36,8 +36,15 @@ const BlocksGameGrid = ({ blocks, sportsGame, blocksGame }: BlocksGameGridProps)
                 {sportsGame.homeTeamAbbr}
             </div>
 
-            <div className=''>
-                <div className="grid grid-cols-[auto_repeat(10,1fr)] gap-0.5">
+            <div className="flex items-center">
+                {/* Away team label (left / y-axis) */}
+                <div className="flex flex-col items-center font-bold text-sm mr-1 leading-none gap-0.5" style={{ color: `#${sportsGame.awayTeamColor}` }}>
+                    {sportsGame.awayTeamAbbr.split('').map((char, i) => (
+                        <span key={i}>{char}</span>
+                    ))}
+                </div>
+
+                <div className="flex-1 grid grid-cols-[auto_repeat(10,1fr)] gap-0.5">
                     {/* Top-left empty corner */}
                     <div />
 
@@ -67,11 +74,6 @@ const BlocksGameGrid = ({ blocks, sportsGame, blocksGame }: BlocksGameGridProps)
                             })}
                         </>
                     ))}
-                </div>
-
-                {/* Away team label (left / y-axis) */}
-                <div className="text-center font-bold text-sm mt-1 [writing-mode:vertical-rl]" style={{ color: `#${sportsGame.awayTeamColor}` }}>
-                    {sportsGame.awayTeamAbbr}
                 </div>
             </div>
 
