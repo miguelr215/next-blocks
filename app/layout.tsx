@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import "./globals.css";
+import "@/app/globals.css";
 import { Montserrat } from "next/font/google";
 import { SBHeader } from "@/components/sb-header";
 import FooterSection from "@/components/footer";
