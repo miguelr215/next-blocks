@@ -1,15 +1,16 @@
 import BlocksGameBlock from './BlocksGameBlock';
-import type { Block, SportsGame, BlocksGame } from '@/lib/types';
+import type { BlockWithUser, SportsGame, BlocksGame } from '@/lib/types';
 
 interface BlocksGameGridProps {
-    blocks: Block[];
+    blocks: BlockWithUser[];
     sportsGame: SportsGame;
     blocksGame: BlocksGame;
+    userId: string;
 }
 
-const BlocksGameGrid = ({ blocks, sportsGame, blocksGame }: BlocksGameGridProps) => {
+const BlocksGameGrid = ({ blocks, sportsGame, blocksGame, userId }: BlocksGameGridProps) => {
     // Build a 10x10 lookup: grid[y][x]
-    const grid: (Block | undefined)[][] = Array.from({ length: 10 }, () => Array(10).fill(undefined));
+    const grid: (BlockWithUser | undefined)[][] = Array.from({ length: 10 }, () => Array(10).fill(undefined));
     for (const b of blocks) {
         grid[b.yCoordinate][b.xCoordinate] = b;
     }
@@ -30,7 +31,7 @@ const BlocksGameGrid = ({ blocks, sportsGame, blocksGame }: BlocksGameGridProps)
     });
 
     return (
-        <div className="w-full max-w-2xl mx-auto">
+        <div className="w-full max-w-3xl mx-auto">
             {/* Home team label (top / x-axis) */}
             <div className="text-center font-bold text-sm mb-1" style={{ color: `#${sportsGame.homeTeamColor}` }}>
                 {sportsGame.homeTeamAbbr}
@@ -67,7 +68,7 @@ const BlocksGameGrid = ({ blocks, sportsGame, blocksGame }: BlocksGameGridProps)
                             {coordinates.map((x) => {
                                 const b = grid[y][x];
                                 return b ? (
-                                    <BlocksGameBlock key={b.id} block={b} />
+                                    <BlocksGameBlock key={b.id} block={b} blocksGameId={blocksGame.id} userId={userId} league={sportsGame.league} event={sportsGame.name} />
                                 ) : (
                                     <div key={`empty-${x}-${y}`} className="aspect-square border border-gray-300 rounded-sm" />
                                 );

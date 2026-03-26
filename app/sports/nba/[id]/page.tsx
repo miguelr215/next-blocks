@@ -1,8 +1,11 @@
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { auth } from "@/lib/auth";
 import BlocksGameGrid from "@/components/BlocksGameGrid";
 import { getBlocksGameById } from "@/server/games";
 import { getAllBlocksForGame } from "@/server/blocks";
-import Image from "next/image";
-import Link from "next/link";
 
 interface NBABlockGamePageProps {
   params: Promise<{ id: string }>;
@@ -10,6 +13,15 @@ interface NBABlockGamePageProps {
 
 const NBABlockGamePage = async ({ params }: NBABlockGamePageProps) => {
   const { id } = await params;
+
+  // Server-side auth check — redirect unauthenticated users to login
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  const userId = session.user.id;
 
   const [gameResult, blocksResult] = await Promise.all([
     getBlocksGameById(id),
@@ -87,6 +99,7 @@ const NBABlockGamePage = async ({ params }: NBABlockGamePageProps) => {
         blocks={blocksResult.data}
         sportsGame={sportsGame}
         blocksGame={blocksGame}
+        userId={userId}
       />
     </div>
   );

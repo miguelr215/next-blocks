@@ -13,7 +13,7 @@ interface BlocksGameCardProps {
 
 const BlocksGameCard = ({ game }: BlocksGameCardProps) => {
     return (
-        <div className='border border-gray-300 rounded-lg hover:shadow-lg dark:hover:shadow-gray-100 transition-all duration-300 ease-in-out h-full max-w-120 lg:max-w-72'>
+        <div className='border border-gray-300 rounded-lg hover:shadow-lg dark:hover:shadow-gray-100 transition-all duration-300 ease-in-out h-full max-w-120 lg:max-w-74'>
             <Link href={`/sports/${game.sportsGame.league}/${game.blocksGame.id}`} className='grid grid-cols-2 h-full lg:flex lg:flex-col'>
                 <div className='relative h-full flex flex-col'>
                     <div className="p-4 flex-1 flex justify-center items-center rounded-tl-lg lg:rounded-t-lg" style={{ backgroundColor: `#${game.sportsGame.awayTeamColor}` }}>
@@ -51,11 +51,11 @@ const BlocksGameCard = ({ game }: BlocksGameCardProps) => {
                                 timeZoneName: "short"
                             })}
                         </p>
-                        <p className='text-sm'>
-                            <span className='font-semibold'>Blocks:</span> {game.blocksGame.blocksSold} / 100
+                        <p className='text-sm lg:flex lg:justify-between'>
+                            <span className='font-semibold'>Blocks Available:</span> <span>{100 - game.blocksGame.blocksSold} / 100</span>
                         </p>
-                        <p className='text-sm'>
-                            <span className='font-semibold'>Price:</span> ${game.blocksGame.pricePerBlock} / block
+                        <p className='text-sm lg:flex lg:justify-between'>
+                            <span className='font-semibold'>Price:</span> <span>${game.blocksGame.pricePerBlock} / block</span>
                         </p>
                     </div>
                     <div className="mt-4">
