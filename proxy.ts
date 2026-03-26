@@ -18,5 +18,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard", "/sports/nba/:id+"],
+  matcher: ["/dashboard/:page*", "/sports/nba/:id+"],
 };
