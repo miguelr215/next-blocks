@@ -3,10 +3,10 @@ import React from 'react'
 
 const Dashboard = () => {
     return (
-        <main>
+        <section>
             <h1>Dashboard</h1>
             <Logout />
-        </main>
+        </section>
     )
 }
 
