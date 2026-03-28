@@ -3,6 +3,7 @@ import Image from 'next/image';
 import vsImg from '@/public/vs.png';
 import { Button } from './ui/button';
 import type { BlocksGame, SportsGame } from '@/lib/types';
+import { formatCurrency } from '@/lib/utils';
 
 interface BlocksGameCardProps {
     game: {
@@ -52,10 +53,13 @@ const BlocksGameCard = ({ game }: BlocksGameCardProps) => {
                             })}
                         </p>
                         <p className='text-sm lg:flex lg:justify-between'>
-                            <span className='font-semibold'>Blocks Available:</span> <span>{100 - game.blocksGame.blocksSold} / 100</span>
+                            <span className='font-semibold'>Blocks available:</span> <span>{100 - game.blocksGame.blocksSold} / 100</span>
                         </p>
                         <p className='text-sm lg:flex lg:justify-between'>
-                            <span className='font-semibold'>Price:</span> <span>${game.blocksGame.pricePerBlock} / block</span>
+                            <span className='font-semibold'>Price:</span> <span>{formatCurrency(game.blocksGame.pricePerBlock)} / block</span>
+                        </p>
+                        <p className='text-sm lg:flex lg:justify-between'>
+                            <span className='font-semibold'>Prize pool:</span> <span>{formatCurrency(game.blocksGame.prizeTotal)}</span>
                         </p>
                     </div>
                     <div className="mt-4">

@@ -31,13 +31,13 @@ const BlocksGameGrid = ({ blocks, sportsGame, blocksGame, userId }: BlocksGameGr
     });
 
     return (
-        <div className="w-full max-w-3xl mx-auto">
+        <div className="w-full max-w-3xl mx-auto lg:mt-6">
             {/* Home team label (top / x-axis) */}
             <div className="text-center font-bold text-sm mb-1" style={{ color: `#${sportsGame.homeTeamColor}` }}>
                 {sportsGame.homeTeamAbbr}
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-center sm:gap-1 lg:gap-2">
                 {/* Away team label (left / y-axis) */}
                 <div className="flex flex-col items-center font-bold text-sm mr-1 leading-none gap-0.5" style={{ color: `#${sportsGame.awayTeamColor}` }}>
                     {sportsGame.awayTeamAbbr.split('').map((char, i) => (
@@ -51,7 +51,7 @@ const BlocksGameGrid = ({ blocks, sportsGame, blocksGame, userId }: BlocksGameGr
 
                     {/* X-axis header numbers (columns) */}
                     {xAxisNumbers.map((n, i) => (
-                        <div key={`x-${i}`} className="flex items-center justify-center text-xs font-semibold">
+                        <div key={`x-${i}`} className="flex items-center justify-center text-sm font-semibold">
                             {blocksGame.axisNumbersGenerated ? n : "?"}
                         </div>
                     ))}
@@ -60,7 +60,7 @@ const BlocksGameGrid = ({ blocks, sportsGame, blocksGame, userId }: BlocksGameGr
                     {coordinates.map((y) => (
                         <>
                             {/* Y-axis header number */}
-                            <div key={`y-${y}`} className="flex items-center justify-center text-xs font-semibold pr-1">
+                            <div key={`y-${y}`} className="flex items-center justify-center text-sm font-semibold pr-1">
                                 {blocksGame.axisNumbersGenerated ? yAxisNumbers[y] : "?"}
                             </div>
 
