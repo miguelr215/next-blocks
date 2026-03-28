@@ -119,7 +119,6 @@ const DashboardSidebar = () => {
 
     return (
         <Sidebar className="top-20 md:top-25 lg:top-26.75 h-[calc(100svh-5rem)] md:h-[calc(100svh-6.25rem)] lg:h-[calc(100svh-6.6875rem)]" collapsible="icon">
-            <SidebarHeader />
             <SidebarContent>
                 {sidebarSections.map((section) => (
                     <SidebarGroup key={section.label}>
