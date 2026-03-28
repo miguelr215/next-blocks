@@ -96,9 +96,16 @@ export const SBHeader = () => {
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:items-center sm:gap-3 sm:space-y-0 md:w-fit">
                                 {isPending ? null : session ? (
                                     <>
-                                        <Link href="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-blue-900">
-                                            ${session.user.accountBalance}
-                                        </Link>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Link href="/dashboard/wallet" className="text-sm font-medium text-muted-foreground hover:text-blue-900">
+                                                    ${session.user.accountBalance}
+                                                </Link>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                Wallet
+                                            </TooltipContent>
+                                        </Tooltip>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
                                                 <Link
@@ -108,7 +115,7 @@ export const SBHeader = () => {
                                                 </Link>
                                             </TooltipTrigger>
                                             <TooltipContent>
-                                                Profile
+                                                Dashboard
                                             </TooltipContent>
                                         </Tooltip>
                                         <Tooltip>
