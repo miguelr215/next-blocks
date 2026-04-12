@@ -102,19 +102,19 @@ const ProfilePage = () => {
                 </div>
             </div>
 
-            <div className="mt-8 flex items-center gap-4">
+            <div className="mt-8 flex items-center gap-4 flex-wrap sm:flex-nowrap">
                 <Label htmlFor="phoneNumber" className='font-semibold'>Phone Number:</Label>
                 <p>{phoneNumber}</p>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="shrink-0 cursor-pointer" onClick={handleEditPhone}>
+                            <Pencil className="size-4" />
+                            <span className="sr-only">Edit phone number</span>
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Edit phone number</TooltipContent>
+                </Tooltip>
                 <div className="flex items-center gap-2">
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" className="shrink-0 cursor-pointer" onClick={handleEditPhone}>
-                                <Pencil className="size-4" />
-                                <span className="sr-only">Edit phone number</span>
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Edit phone number</TooltipContent>
-                    </Tooltip>
                     <div ref={editPhoneRef} className="hidden">
                         <Input
                             ref={phoneInputRef}
