@@ -2,7 +2,7 @@ import React from 'react'
 
 const ChangePasswordPage = () => {
     return (
-        <div>ChangePasswordPage</div>
+        <section className='mt-4'>ChangePasswordPage</section>
     )
 }
 

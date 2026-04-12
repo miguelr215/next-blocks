@@ -2,7 +2,7 @@ import React from 'react'
 
 const MyGamesPage = () => {
     return (
-        <div>MyGamesPage</div>
+        <section className='mt-4'>MyGamesPage</section>
     )
 }
 

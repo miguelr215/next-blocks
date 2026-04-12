@@ -2,7 +2,7 @@ import React from 'react'
 
 const FriendsPage = () => {
     return (
-        <div>FriendsPage</div>
+        <section className='mt-4'>FriendsPage</section>
     )
 }
 

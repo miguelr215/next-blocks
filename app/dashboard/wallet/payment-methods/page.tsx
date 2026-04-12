@@ -2,7 +2,7 @@ import React from 'react'
 
 const PaymentMethodsPage = () => {
     return (
-        <div>PaymentMethodsPage</div>
+        <section className='mt-4'>PaymentMethodsPage</section>
     )
 }
 

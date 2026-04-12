@@ -2,7 +2,7 @@ import React from 'react'
 
 const CreatePrivateGamePage = () => {
     return (
-        <div>CreatePrivateGamePage</div>
+        <section className='mt-4'>CreatePrivateGamePage</section>
     )
 }
 

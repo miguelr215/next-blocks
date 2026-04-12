@@ -4,7 +4,7 @@ import React from 'react'
 
 const Dashboard = () => {
     return (
-        <section>
+        <section className='mt-4'>
             <h1>My Dashboard</h1>
             <div className="my-8">
                 <h2>Active Games</h2>

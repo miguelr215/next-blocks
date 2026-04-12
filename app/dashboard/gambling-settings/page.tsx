@@ -2,7 +2,7 @@ import React from 'react'
 
 const GamblingSettingsPage = () => {
     return (
-        <div>GamblingSettingsPage</div>
+        <section className='mt-4'>GamblingSettingsPage</section>
     )
 }
 

@@ -2,7 +2,7 @@ import React from 'react'
 
 const GamesHistoryPage = () => {
     return (
-        <div>GamesHistoryPage</div>
+        <section className='mt-4'>GamesHistoryPage</section>
     )
 }
 

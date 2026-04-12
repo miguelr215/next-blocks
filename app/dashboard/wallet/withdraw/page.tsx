@@ -2,7 +2,7 @@ import React from 'react'
 
 const WithdrawFundsPage = () => {
     return (
-        <div>WithdrawFundsPage</div>
+        <section className='mt-4'>WithdrawFundsPage</section>
     )
 }
 

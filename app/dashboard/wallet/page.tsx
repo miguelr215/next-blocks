@@ -2,7 +2,7 @@ import React from 'react'
 
 const WalletPage = () => {
     return (
-        <div>WalletPage</div>
+        <section className='mt-4'>WalletPage</section>
     )
 }
 
