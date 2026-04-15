@@ -82,74 +82,77 @@ export const BackgroundColorSection = ({ bgColor, onSaved }: BackgroundColorSect
     }
 
     return (
-        <div className="mb-6 flex items-center gap-4 flex-wrap sm:flex-nowrap">
-            <Label className='font-semibold'>Background Color:</Label>
-            <div className={`size-4 rounded-full ${bgColor ?? ''}`} />
-            <p>{bgColor}</p>
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon" className="shrink-0 cursor-pointer" onClick={handleEditBgColor}>
-                        <Pencil className="size-4" />
-                        <span className="sr-only">Edit background color</span>
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent>Edit background color</TooltipContent>
-            </Tooltip>
-            <div className="flex items-center gap-2">
-                <div ref={editBgColorRef} className="hidden">
-                    <div ref={bgColorDropdownRef} className="relative">
-                        <button
-                            type="button"
-                            onClick={() => setIsBgColorOpen((prev) => !prev)}
-                            className="flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm cursor-pointer min-w-40"
-                        >
-                            {selectedBgColor ? (
-                                <>
-                                    <span className={`size-3 rounded-full ${selectedBgColor}`} />
-                                    {selectedBgColor}
-                                </>
-                            ) : (
-                                'Select a color'
+        <>
+            <p className='text-xs text-gray-500'>*only active with background image disabled</p>
+            <div className="mb-6 flex items-center gap-4 flex-wrap sm:flex-nowrap">
+                <Label className='font-semibold'>Background Color:</Label>
+                <div className={`size-4 rounded-full ${bgColor ?? ''}`} />
+                <p>{bgColor}</p>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="shrink-0 cursor-pointer" onClick={handleEditBgColor}>
+                            <Pencil className="size-4" />
+                            <span className="sr-only">Edit background color</span>
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Edit background color</TooltipContent>
+                </Tooltip>
+                <div className="flex items-center gap-2">
+                    <div ref={editBgColorRef} className="hidden">
+                        <div ref={bgColorDropdownRef} className="relative">
+                            <button
+                                type="button"
+                                onClick={() => setIsBgColorOpen((prev) => !prev)}
+                                className="flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm cursor-pointer min-w-40"
+                            >
+                                {selectedBgColor ? (
+                                    <>
+                                        <span className={`size-3 rounded-full ${selectedBgColor}`} />
+                                        {selectedBgColor}
+                                    </>
+                                ) : (
+                                    'Select a color'
+                                )}
+                            </button>
+                            {isBgColorOpen && (
+                                <ul className="absolute z-50 mt-1 max-h-48 w-full overflow-y-auto rounded-md border border-input bg-background py-1 text-sm shadow-md">
+                                    {BG_COLORS.map((color) => (
+                                        <li
+                                            key={color}
+                                            onClick={() => {
+                                                setSelectedBgColor(color)
+                                                setIsBgColorOpen(false)
+                                            }}
+                                            className={`flex cursor-pointer items-center gap-2 px-3 py-1.5 hover:text-white hover:${color}`}
+                                        >
+                                            <span className={`size-3 shrink-0 rounded-full ${color}`} />
+                                            {color}
+                                        </li>
+                                    ))}
+                                </ul>
                             )}
-                        </button>
-                        {isBgColorOpen && (
-                            <ul className="absolute z-50 mt-1 max-h-48 w-full overflow-y-auto rounded-md border border-input bg-background py-1 text-sm shadow-md">
-                                {BG_COLORS.map((color) => (
-                                    <li
-                                        key={color}
-                                        onClick={() => {
-                                            setSelectedBgColor(color)
-                                            setIsBgColorOpen(false)
-                                        }}
-                                        className={`flex cursor-pointer items-center gap-2 px-3 py-1.5 hover:text-white hover:${color}`}
-                                    >
-                                        <span className={`size-3 shrink-0 rounded-full ${color}`} />
-                                        {color}
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
+                        </div>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant="ghost" size="icon" className="shrink-0 cursor-pointer" onClick={handleSaveBgColor} disabled={isSaving}>
+                                    <ArrowDownToLine className="size-4" />
+                                    <span className="sr-only">Save</span>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Save</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant="ghost" size="icon" className="shrink-0 cursor-pointer" onClick={handleCancelEditBgColor}>
+                                    <X className='size-4' />
+                                    <span className="sr-only">Cancel</span>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Cancel</TooltipContent>
+                        </Tooltip>
                     </div>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" className="shrink-0 cursor-pointer" onClick={handleSaveBgColor} disabled={isSaving}>
-                                <ArrowDownToLine className="size-4" />
-                                <span className="sr-only">Save</span>
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Save</TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" className="shrink-0 cursor-pointer" onClick={handleCancelEditBgColor}>
-                                <X className='size-4' />
-                                <span className="sr-only">Cancel</span>
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Cancel</TooltipContent>
-                    </Tooltip>
                 </div>
             </div>
-        </div>
+        </>
     )
 }

@@ -8,6 +8,7 @@ import { BackgroundImageSection } from '@/components/profile/BackgroundImageSect
 import { NameSection } from '@/components/profile/NameSection'
 import { PhoneNumberSection } from '@/components/profile/PhoneNumberSection'
 import { EmailSection } from '@/components/profile/EmailSection'
+import { Separator } from '@/components/ui/separator';
 
 const ProfilePage = () => {
     const { data: session, isPending, refetch } = authClient.useSession()
@@ -56,6 +57,8 @@ const ProfilePage = () => {
                     <p className="text-sm text-muted-foreground">{phoneNumber}</p>
                 </div>
             </div>
+
+            <Separator className='mb-6' />
 
             <BackgroundImageSection image={image} onSaved={handleSaved} />
 

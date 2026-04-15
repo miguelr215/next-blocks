@@ -8,7 +8,7 @@ const DashboardLayout = ({ children }: Readonly<{
     return (
         <SidebarProvider>
             <DashboardSidebar />
-            <section id="dl">
+            <section id="dl" className="w-full">
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <SidebarTrigger />
