@@ -126,10 +126,10 @@ export const updateUserName = async (name: string) => {
 /**
  * Updates the authenticated user's profile image.
  *
- * @param image - The new image URL to set
+ * @param image - The new image URL to set, or null to remove the image
  * @returns Object with success status and message
  */
-export const updateUserImage = async (image: string) => {
+export const updateUserImage = async (image: string | null) => {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),

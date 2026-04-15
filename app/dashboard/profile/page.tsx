@@ -2,10 +2,12 @@
 
 import { useCallback } from 'react'
 import { Avatar } from '@/components/ui/avatar'
-import { Label } from '@/components/ui/label'
 import { authClient } from '@/lib/auth-client'
 import { BackgroundColorSection } from '@/components/profile/BackgroundColorSection'
+import { BackgroundImageSection } from '@/components/profile/BackgroundImageSection'
+import { NameSection } from '@/components/profile/NameSection'
 import { PhoneNumberSection } from '@/components/profile/PhoneNumberSection'
+import { EmailSection } from '@/components/profile/EmailSection'
 
 const ProfilePage = () => {
     const { data: session, isPending, refetch } = authClient.useSession()
@@ -55,22 +57,14 @@ const ProfilePage = () => {
                 </div>
             </div>
 
-            {/* Background Color */}
+            <BackgroundImageSection image={image} onSaved={handleSaved} />
+
             <BackgroundColorSection bgColor={bgColor} onSaved={handleSaved} />
 
-            <div className="mb-6 flex items-center gap-4 flex-wrap sm:flex-nowrap">
-                <Label>Background Image:</Label>
-            </div>
+            <NameSection name={name} onSaved={handleSaved} />
 
-            <div className="mb-6 flex items-center gap-4 flex-wrap sm:flex-nowrap">
-                <Label>Name:</Label>
-            </div>
+            <EmailSection email={email} onSaved={handleSaved} />
 
-            <div className="mb-6 flex items-center gap-4 flex-wrap sm:flex-nowrap">
-                <Label>Email:</Label>
-            </div>
-
-            {/* Phone Number */}
             <PhoneNumberSection phoneNumber={phoneNumber} onSaved={handleSaved} />
         </section>
     )
