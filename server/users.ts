@@ -2,9 +2,10 @@
 
 import { auth } from "@/lib/auth";
 import { db } from "@/db/drizzle";
-import { user } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { account, user } from "@/db/schema";
+import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
+import { hashPassword } from "better-auth/crypto";
 
 export const signIn = async (email: string, password: string) => {
   try {
@@ -218,6 +219,50 @@ export const updateUserPhoneNumber = async (phoneNumber: string) => {
     return {
       success: true,
       message: "Phone number updated successfully",
+    };
+  } catch (error) {
+    const e = error as Error;
+    return {
+      success: false,
+      message: `Error: ${e.message}`,
+    };
+  }
+};
+
+/**
+ * Updates the authenticated user's password.
+ *
+ * @param newPassword - The new password to set
+ * @returns Object with success status and message
+ */
+export const updateUserPassword = async (newPassword: string) => {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      return {
+        success: false,
+        message: "User not authenticated",
+      };
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
+
+    await db
+      .update(account)
+      .set({ password: hashedPassword })
+      .where(
+        and(
+          eq(account.userId, session.user.id),
+          eq(account.providerId, "credential"),
+        ),
+      );
+
+    return {
+      success: true,
+      message: "Password updated successfully",
     };
   } catch (error) {
     const e = error as Error;
