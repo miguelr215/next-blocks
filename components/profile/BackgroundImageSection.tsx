@@ -118,7 +118,14 @@ export const BackgroundImageSection = ({ image, onSaved }: BackgroundImageSectio
     return (
         <div className="mb-6 flex items-center gap-4 flex-wrap sm:flex-nowrap">
             <Label htmlFor="image" className='font-semibold'>Background Image:</Label>
-            <Switch checked={isEnabled} onCheckedChange={handleToggle} disabled={isSaving} />
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <span>
+                        <Switch checked={isEnabled} onCheckedChange={handleToggle} disabled={isSaving} className='cursor-pointer' />
+                    </span>
+                </TooltipTrigger>
+                <TooltipContent>{isEnabled ? 'Disable background image' : 'Enable background image'}</TooltipContent>
+            </Tooltip>
             {isEnabled && (
                 <>
                     {image && (
