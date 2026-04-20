@@ -148,7 +148,7 @@ export const getAllActiveBlocksGamesByDateRange = async (
 
 /**
  * Generates a shuffled array of digits 0-9 using Fisher-Yates shuffle.
- * Each digit appears exactly once (non-repeating).
+ * Each digit appears exactly once (non-repeating). ✅
  */
 const generateShuffledAxis = (): number[] => {
   logger.info(`generateShuffledAxis called...`);
@@ -162,7 +162,7 @@ const generateShuffledAxis = (): number[] => {
 };
 
 /**
- * Updates the blocksGame record to set axisNumbersGenerated to true.
+ * Updates the blocksGame record to set axisNumbersGenerated to true. ✅
  *
  * @param blocksGameId - The ID of the blocks game to update
  * @returns Object with success status and message
@@ -198,10 +198,9 @@ const updateBlocksGameAxisNumbersGenerated = async (blocksGameId: string) => {
   }
 };
 
-// TODO: this function is ready to test ⬇️
 /**
  * Generates random axis numbers for a blocks game and assigns them to all blocks.
- * X-axis numbers map to homeTeamScore, Y-axis numbers map to awayTeamScore.
+ * X-axis numbers map to homeTeamScore, Y-axis numbers map to awayTeamScore. ✅
  *
  * @param blocksGameId - The ID of the blocks game to generate axis numbers for
  * @returns Object with success status, message, and the generated axis arrays
@@ -314,8 +313,41 @@ export const getBlocksGameById = async (id: string) => {
   }
 };
 
-// get all blocks games for a user
-export const getAllBlocksGamesForUser = async (userId: string) => {};
+/**
+ * Fetches all blocks games where the user has purchased at least one block.
+ *
+ * @param userId - The unique identifier of the user
+ * @returns Object with success status, message, and array of blocks games with sports game data
+ */
+export const getAllBlocksGamesForUser = async (userId: string) => {
+  logger.info(`getAllBlocksGamesForUser called with userId: ${userId}`);
+
+  try {
+    const userGames = await db
+      .selectDistinctOn([blocksGame.id])
+      .from(blocksGame)
+      .innerJoin(block, eq(block.blocksGameId, blocksGame.id))
+      .innerJoin(sportsGame, eq(blocksGame.sportsGameId, sportsGame.id))
+      .where(eq(block.userId, userId));
+
+    logger.info(`Found ${userGames.length} blocks games for user ${userId}`);
+
+    return {
+      success: true,
+      message: `Found ${userGames.length} blocks games for user ${userId}`,
+      data: userGames,
+    };
+  } catch (error) {
+    logger.error(
+      error instanceof Error ? error : String(error),
+      "Error fetching blocks games for user",
+    );
+    return {
+      success: false,
+      message: `Error fetching blocks games for user: ${(error as Error).message}`,
+    };
+  }
+};
 
 // get all blocks games created by a user
 export const getAllBlocksGamesCreatedByUser = async (userId: string) => {};
@@ -327,7 +359,7 @@ export const updateBlocksGame = async (
 ) => {};
 
 /**
- * Increases the blocksSold count by 1 for a blocks game.
+ * Increases the blocksSold count by 1 for a blocks game. ✅
  *
  * @param blocksGameId - The ID of the blocks game to update
  * @returns Object with success status, message, and updated blocksSold count
@@ -373,7 +405,7 @@ export const increaseBlockCount = async (blocksGameId: string) => {
 
 /**
  * Decreases the blocksSold count by 1 for a blocks game.
- * Will not decrease below 0.
+ * Will not decrease below 0. ✅
  *
  * @param blocksGameId - The ID of the blocks game to update
  * @returns Object with success status, message, and updated blocksSold count
@@ -415,6 +447,95 @@ export const decreaseBlockCount = async (blocksGameId: string) => {
     return {
       success: false,
       message: `Error decreasing block count: ${(error as Error).message}`,
+    };
+  }
+};
+
+/**
+ * Fetches all active blocks games that a user is participating in
+ * (i.e. has at least one purchased block).
+ *
+ * @param userId - The unique identifier of the user
+ * @returns Object with success status and an array of blocksGame + sportsGame pairs
+ */
+export const getActiveBlocksGamesForUser = async (userId: string) => {
+  logger.info(`getActiveBlocksGamesForUser called with userId: ${userId}`);
+
+  try {
+    const activeGames = await db
+      .selectDistinctOn([blocksGame.id], {
+        blocksGame: blocksGame,
+        sportsGame: sportsGame,
+      })
+      .from(block)
+      .innerJoin(blocksGame, eq(block.blocksGameId, blocksGame.id))
+      .innerJoin(sportsGame, eq(blocksGame.sportsGameId, sportsGame.id))
+      .where(
+        and(
+          eq(block.userId, userId),
+          eq(block.isPurchased, true),
+          eq(blocksGame.isActive, true),
+        ),
+      );
+
+    logger.info(`Found ${activeGames.length} active games for user ${userId}`);
+
+    return {
+      success: true,
+      message: `Found ${activeGames.length} active games for user`,
+      data: activeGames,
+    };
+  } catch (error) {
+    logger.error(
+      error instanceof Error ? error : String(error),
+      "Error fetching active blocks games for user",
+    );
+    return {
+      success: false,
+      message: `Error fetching active blocks games for user: ${(error as Error).message}`,
+    };
+  }
+};
+
+/**
+ * Fetches all blocks a user has purchased, along with the associated
+ * blocksGame and sportsGame data for each block.
+ *
+ * @param userId - The unique identifier of the user
+ * @returns Object with success status, message, and array of block + game data
+ */
+export const getUserBlocksWithGames = async (userId: string) => {
+  logger.info(`getUserBlocksWithGames called with userId: ${userId}`);
+
+  try {
+    const userBlocks = await db
+      .select({
+        block: block,
+        blocksGame: blocksGame,
+        sportsGame: sportsGame,
+      })
+      .from(block)
+      .innerJoin(blocksGame, eq(block.blocksGameId, blocksGame.id))
+      .innerJoin(sportsGame, eq(blocksGame.sportsGameId, sportsGame.id))
+      .where(and(eq(block.userId, userId), eq(block.isPurchased, true)));
+
+    logger.info(
+      `Found ${userBlocks.length} purchased blocks for user ${userId}`,
+    );
+
+    return {
+      success: true,
+      message: `Found ${userBlocks.length} purchased blocks for user ${userId}`,
+      data: userBlocks,
+    };
+  } catch (error) {
+    logger.error(
+      error instanceof Error ? error : String(error),
+      "Error fetching user blocks with games",
+    );
+    return {
+      success: false,
+      message: `Error fetching user blocks with games: ${(error as Error).message}`,
     };
   }
 };
