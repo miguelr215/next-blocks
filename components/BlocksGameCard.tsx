@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import vsImg from '@/public/vs.png';
 import { Button } from './ui/button';
 import type { BlocksGame, SportsGame } from '@/lib/types';
@@ -13,6 +16,9 @@ interface BlocksGameCardProps {
 }
 
 const BlocksGameCard = ({ game }: BlocksGameCardProps) => {
+    const pathname = usePathname();
+    const buttonLabel = pathname === '/dashboard/my-games' ? 'View Game' : 'Play Now';
+
     return (
         <div className='border border-gray-300 rounded-lg hover:shadow-lg dark:hover:shadow-gray-100 transition-all duration-300 ease-in-out h-full max-w-120 lg:max-w-74'>
             <Link href={`/sports/${game.sportsGame.league}/${game.blocksGame.id}`} className='grid grid-cols-2 h-full lg:flex lg:flex-col'>
@@ -63,7 +69,7 @@ const BlocksGameCard = ({ game }: BlocksGameCardProps) => {
                         </p>
                     </div>
                     <div className="mt-4">
-                        <Button variant="default" size="sm" className='cursor-pointer'>Play Now</Button>
+                        <Button variant="default" size="sm" className='cursor-pointer'>{buttonLabel}</Button>
                     </div>
                 </div>
             </Link>
