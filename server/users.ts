@@ -7,6 +7,7 @@ import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { hashPassword } from "better-auth/crypto";
 
+// signIn ✅
 export const signIn = async (email: string, password: string) => {
   try {
     await auth.api.signInEmail({
@@ -29,6 +30,7 @@ export const signIn = async (email: string, password: string) => {
   }
 };
 
+// signUp ✅
 export const signUp = async (
   username: string,
   email: string,
@@ -57,7 +59,7 @@ export const signUp = async (
 };
 
 /**
- * Updates the authenticated user's email address.
+ * Updates the authenticated user's email address. ✅
  *
  * @param email - The new email address to set
  * @returns Object with success status and message
@@ -91,7 +93,7 @@ export const updateUserEmail = async (email: string) => {
 };
 
 /**
- * Updates the authenticated user's display name.
+ * Updates the authenticated user's display name.✅
  *
  * @param name - The new display name to set
  * @returns Object with success status and message
@@ -125,7 +127,7 @@ export const updateUserName = async (name: string) => {
 };
 
 /**
- * Updates the authenticated user's profile image.
+ * Updates the authenticated user's profile image.✅
  *
  * @param image - The new image URL to set, or null to remove the image
  * @returns Object with success status and message
@@ -159,7 +161,7 @@ export const updateUserImage = async (image: string | null) => {
 };
 
 /**
- * Updates the authenticated user's background color.
+ * Updates the authenticated user's background color.✅
  *
  * @param bgColor - The new background color class to set (e.g. "bg-primary", "bg-red-500")
  * @returns Object with success status and message
@@ -193,7 +195,7 @@ export const updateUserBgColor = async (bgColor: string) => {
 };
 
 /**
- * Updates the authenticated user's phone number.
+ * Updates the authenticated user's phone number.✅
  *
  * @param phoneNumber - The new phone number to set
  * @returns Object with success status and message
@@ -230,7 +232,7 @@ export const updateUserPhoneNumber = async (phoneNumber: string) => {
 };
 
 /**
- * Updates the authenticated user's password.
+ * Updates the authenticated user's password.✅
  *
  * @param newPassword - The new password to set
  * @returns Object with success status and message
@@ -272,3 +274,8 @@ export const updateUserPassword = async (newPassword: string) => {
     };
   }
 };
+
+/**
+ * TODO: NEED TO CREATE FUNCTION TO SEND RESET PW EMAIL WITH UNIQUE TOKEN
+ * TODO: ALSO NEED TO REFACTOR SCHEMA & newPassword TO ACCEPT AND VERIFY THIS UNIQUE TOKEN
+ */
